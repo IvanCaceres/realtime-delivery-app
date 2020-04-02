@@ -1,41 +1,61 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
+// layouts
+import AdminLayout from './Layouts/AdminLayout'
+import AppLayout from './Layouts/AppLayout'
+
 // page components
-import Home from "./pages/Home";
+import AdminDashboard from "./pages/AdminDashboard"
+import AddFeaturedItemForm from "./components/FeaturedItemsForm"
+import AddProductForm from "./components/AddProductForm"
+import CategoryForm from "./components/CategoryForm"
 import Category from "./pages/Category";
+import GenerateReferralCodesForm from './components/GenerateReferralCodesForm'
+import Home from "./pages/Home";
+import LoginForm from "./components/LoginForm"
 import Product from "./pages/Product";
+import ProductOptionForm from "./components/ProductOptionForm";
+import RegistrationForm from "./components/RegistrationForm"
 
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit wwoww meee
-            <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-        <Switch>
-          <Route path="/product/:productId" children={<Product />} />
-          <Route path="/:category" children={<Category />} />
-          <Route path="/">
+      <Switch>
+        <Route path="/admin">
+          <AdminLayout>
+            <Route exact path="/admin">
+              <AdminDashboard />
+            </Route>
+            <Route path="/admin/category">
+              <CategoryForm />
+            </Route>
+            <Route path="/admin/featured/add">
+              <AddFeaturedItemForm />
+            </Route>
+            <Route path="/admin/products/add">
+              <AddProductForm />
+            </Route>
+            <Route path="/admin/products/options">
+              <ProductOptionForm />
+            </Route>
+            <Route path="/admin/referral/add">
+              <GenerateReferralCodesForm />
+            </Route>
+          </AdminLayout>
+        </Route>
+        <AppLayout>
+          <Route path="/register" children={<RegistrationForm />} />
+          <Route path="/login" children={<LoginForm />} />
+          {/* <Route path="/product/:productId" children={<Product />} /> */}
+          {/* <Route path="/:category" children={<Category />} /> */}
+          <Route exact path="/">
             <Home />
           </Route>
-        </Switch>
-      </div>
-    </Router>
+        </AppLayout>
+      </Switch>
+    </Router >
   );
 };
 

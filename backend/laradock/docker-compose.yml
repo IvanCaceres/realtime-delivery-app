@@ -51,7 +51,7 @@ volumes:
     driver: ${VOLUMES_DRIVER}
   dind:
     driver: ${VOLUMES_DRIVER}
-
+  pgRDAdata:
 services:
 
 ### Workspace Utilities ##################################
@@ -466,8 +466,13 @@ services:
     postgres:
       build: ./postgres
       volumes:
-        - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+        # persist data path on production and platforms other than windows 
+        # this doesn't work on windows, uncomment on linux production server or mac os x dev machine
+        # - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+        # windows development machine workaround
+        - pgRDAdata:/var/lib/postgresql/data
         - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+      # when deploying production site make comment this to make DB port no longer accessible
       ports:
         - "${POSTGRES_PORT}:5432"
       environment:

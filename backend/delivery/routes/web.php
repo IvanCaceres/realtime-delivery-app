@@ -11,6 +11,9 @@
 |
 */
 
+// Auth Routes
+Route::post('/register', 'Auth\RegisterController@register');
+
 Route::get('/', function () {
     return view('welcome');
 });
