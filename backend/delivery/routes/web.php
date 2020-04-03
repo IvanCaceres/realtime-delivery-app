@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,8 +13,32 @@
 */
 
 // Auth Routes
-Route::post('/register', 'Auth\RegisterController@register');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('/register', 'Auth\RegisterController@register')->name('register');
+Route::get('/user', function(Request $request) {
+    return $request->user();
+});
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Admin Routes
+Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->group(function () {
+    Route::get('/category', function () {
+        return view('welcome');
+    });
+    Route::get('/category/edit/{id}', function () {
+        return view('welcome');
+    });
+    Route::post('/category', 'CategoryController@create');
+    Route::post('/productOption', 'ProductOptionController@create');
+    Route::post('/product', 'ProductsController@create');
+    Route::get('/products/add', function () {
+        return view('welcome');
+    });
+    Route::get('/', function () {
+        return view('welcome');
+    });
 });

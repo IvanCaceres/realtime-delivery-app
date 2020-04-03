@@ -28,7 +28,7 @@ const App: React.FC = () => {
             <Route exact path="/admin">
               <AdminDashboard />
             </Route>
-            <Route path="/admin/category">
+            <Route path={["/admin/category/edit/:id", "/admin/category"]}>
               <CategoryForm />
             </Route>
             <Route path="/admin/featured/add">

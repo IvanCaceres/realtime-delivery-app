@@ -1,4 +1,5 @@
 import React from "react"
+import { connect } from 'react-redux'
 
 // material ui components
 import Avatar from '@material-ui/core/Avatar';
@@ -6,15 +7,14 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
-import FormControl from '@material-ui/core/FormControl'
 import FormHelperText from '@material-ui/core/FormHelperText'
-import InputLabel from '@material-ui/core/InputLabel'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
+
+// redux actions
+import { login as loginActionCreator } from './../store/features/user/userFeatures'
 
 const useStyles = makeStyles(theme => ({
     avatar: {
@@ -35,30 +35,35 @@ const useStyles = makeStyles(theme => ({
 interface formErrors {
     username: string | null,
     password: string | null,
-    confirmPassword: string | null,
-    referralCode: string | null
 }
 
-export default function AddProductForm() {
+function LoginForm({ login }: any) {
     const classes = useStyles()
 
-    // effects
     let formErrorsState = {
         username: null,
         password: null,
-        confirmPassword: null,
-        referralCode: null
     }
 
     // component state
-    const [confirmPassword, setConfirmPassword] = React.useState<string>('')
     const [formErrors, setFormErrors] = React.useState<formErrors>(formErrorsState)
-    const [labelWidth, setLabelWidth] = React.useState(0);
     // form submission loading indicator
     const [loading, setLoading] = React.useState<boolean>(false)
     const [password, setPassword] = React.useState<string>('')
-    const [referralCode, setReferralCode] = React.useState<string>('')
     const [username, setUsername] = React.useState<string>('')
+
+    function handleSubmit(event: any) {
+        event.preventDefault()
+        if (loading) {
+            return
+        }
+        setLoading(true)
+        let loginData = {
+            username,
+            password
+        }
+        login(loginData)
+    }
 
     return (
         <Container component="main" maxWidth="sm">
@@ -70,7 +75,7 @@ export default function AddProductForm() {
                     Sign In
                 </Typography>
             </Box>
-            <form className={classes.form}>
+            <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
                 {/* Username */}
                 <TextField
                     error={!!formErrors['username']}
@@ -95,6 +100,7 @@ export default function AddProductForm() {
                     required
                     fullWidth
                     id="password"
+                    type="password"
                     label="Password"
                     name="password"
                     autoComplete="off"
@@ -121,3 +127,12 @@ export default function AddProductForm() {
         </Container>
     )
 }
+
+const mapDispatch = {
+    login: loginActionCreator
+}
+
+export default connect(
+    undefined,
+    mapDispatch
+)(LoginForm)

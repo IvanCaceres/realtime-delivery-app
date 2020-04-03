@@ -20,11 +20,9 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { MainListItems } from '../components/ListItems';
 // import { getRooms } from './../store/features/rooms/roomsSlice'
-// import { connect } from 'react-redux';
-// import { logout } from './../store/features/user/userFeatures'
+import { connect } from 'react-redux';
+import { logout as logoutActionCreator } from './../store/features/user/userFeatures'
 import { useHistory } from "react-router-dom";
-
-// const mapDispatchToProps = { getRooms, logout }
 
 const drawerWidth = 240;
 
@@ -108,7 +106,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function AdminLayout({ getRooms, token, children, logout }: any) {
+function AdminLayout({ getRooms, token, children, logout }: any) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -175,13 +173,9 @@ export default function AdminLayout({ getRooms, token, children, logout }: any) 
     );
 }
 
-// function mapStateToProps(state: any) {
-//     return {
-//         token: state.user.token
-//     }
-// }
+const mapDispatchToProps = { logout: logoutActionCreator }
 
-// export default connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-// )(Dashboard)
+export default connect(
+    undefined,
+    mapDispatchToProps
+)(AdminLayout)
