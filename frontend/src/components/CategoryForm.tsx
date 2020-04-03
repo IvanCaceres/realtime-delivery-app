@@ -23,6 +23,9 @@ import Typography from '@material-ui/core/Typography';
 import { submitCategoryFormAction, getCategoryAction, setCategoryAction, clearSubmitOutcomeAction } from './../store/features/category'
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        textAlign: 'center'
+    },
     form: {
         marginTop: theme.spacing(1),
     },
@@ -70,7 +73,7 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
         // fetch category if we don't have it
         if (id && !category) {
             setCategoryId(id)
-            getCategory(id)
+            getCategory({ id })
         }
         if (!id) {
             setCategoryId(undefined)
@@ -128,7 +131,7 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
     }
 
     return (
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="sm" className={classes.root}>
             <Typography component="h1" variant="h3">{categoryId ? 'Edit' : 'Create'} Category</Typography>
             <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
                 {/* Category Name */}

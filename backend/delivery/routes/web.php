@@ -29,6 +29,9 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
     Route::get('/category', function () {
         return view('welcome');
     });
+    Route::get('/category/view', function () {
+        return view('welcome');
+    });
     Route::get('/category/edit/{id}', function () {
         return view('welcome');
     });

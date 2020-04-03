@@ -45,11 +45,21 @@ export const MainListItems = ({ callback }: { callback: any; }) => {
         <div>
             <ListItemLink to="/" primary="Home" icon={<HomeIcon />} />
             <ListItemLink to="/admin" primary="Dashboard" icon={<DashboardIcon />} />
-            <ListItemLink to="/admin/featured/add" primary="Add Featured Item" icon={<FeaturedVideoIcon />} />
-            <ListItemLink to="/admin/category" primary="Add Category" icon={<CategoryIcon />} />
+            <ListSubheader inset>Featured Items</ListSubheader>
+            <ListItemLink to="/admin/featured/add" primary="Add" icon={<FeaturedVideoIcon />} />
+            <ListItemLink to="/admin/featured/add" primary="View All" icon={<FeaturedVideoIcon />} />
+            <ListSubheader inset>Categories</ListSubheader>
+            <ListItemLink to="/admin/category" primary="Add" icon={<CategoryIcon />} />
+            <ListItemLink to="/admin/category/view" primary="View All" icon={<CategoryIcon />} />
+            <ListSubheader inset>Products</ListSubheader>
             <ListItemLink to="/admin/products/add" primary="Add Product" icon={<PostAddIcon />} />
-            <ListItemLink to="/admin/productOption" primary="Product Options" icon={<AddToPhotosIcon />} />
-            <ListItemLink to="/admin/referral/add" primary="Create Referral Codes" icon={<ConfirmationNumberIcon />} />
+            <ListItemLink to="/admin/products/add" primary="View Products" icon={<PostAddIcon />} />
+            <ListSubheader inset>Product Options</ListSubheader>
+            <ListItemLink to="/admin/productOption" primary="Add" icon={<AddToPhotosIcon />} />
+            <ListItemLink to="/admin/productOption" primary="View All" icon={<AddToPhotosIcon />} />
+            <ListSubheader inset>Referral Codes</ListSubheader>
+            <ListItemLink to="/admin/referral/add" primary="Generate" icon={<ConfirmationNumberIcon />} />
+            <ListItemLink to="/admin/referral/add" primary="View All" icon={<ConfirmationNumberIcon />} />
 
             {/* <ListItemLink to="/admin/conferences" primary="All Conferences" icon={<CalendarTodayIcon />} /> */}
             {/* <ListItemLink to="/admin/rooms" primary="Rooms" icon={<MeetingRoomIcon />} /> */}

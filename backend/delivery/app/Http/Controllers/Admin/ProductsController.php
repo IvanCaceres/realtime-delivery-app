@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -9,15 +9,15 @@ use App\Product;
 class ProductsController {
 
     // create new product
-    public function createProduct(Request $request)
+    public function create(Request $request)
     {
         $validator = $request->validate([
             'name' => 'required|string',
             'image' => 'file|image',
             'category_id' => 'required|array',
             'category_id.*' => 'numeric',
-            'option_id' => 'required|array',
-            'option_id.*' => 'numeric'
+            'product_option_id' => 'required|array',
+            'product_option_id.*' => 'numeric'
         ]);
 
         
@@ -33,8 +33,8 @@ class ProductsController {
             $product->save();
 
             $product->categories()->attach($request->input('category_id'));
-            $product->options()->attach($request->input('option_id'));
-            return $conference;
+            $product->options()->attach($request->input('product_option_id'));
+            return $product;
         });
     }
 }

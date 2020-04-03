@@ -21,7 +21,7 @@ export const logout = () => {
 }
 
 // category
-export const getCategory = (id) => {
+export const getCategory = (id, queryParams) => {
     // public route
     // gets all categories if no id is provided
     let url = '/api/category'
@@ -30,6 +30,7 @@ export const getCategory = (id) => {
     }
     return axios({
         method: 'get',
+        params: queryParams,
         url
     });
 }
@@ -54,7 +55,7 @@ export const submitCategoryForm = (name, id) => {
 }
 
 // product option
-export const getProductOption = (id) => {
+export const getProductOption = (id, queryParams) => {
     // public route
     // gets all categories if no id is provided
     let url = '/api/productOption'
@@ -63,6 +64,7 @@ export const getProductOption = (id) => {
     }
     return axios({
         method: 'get',
+        params: queryParams,
         url
     });
 }
@@ -85,4 +87,38 @@ export const submitProductOptionForm = (name, id) => {
             name,
         }
     });
+}
+
+// product
+
+export const submitProductForm = (form) => {
+    let method = 'post'
+
+    let url = '/admin/product'
+
+    if (form.id) {
+        // add put field to FormData
+        formData.set('_method', 'PUT')
+        url += `/${form.id}`
+    }
+
+    // setup request FormData
+    let formData = new FormData();
+
+    for (const [key, val] of Object.entries(form)) {
+        if (key === 'category_id' || key === 'product_option_id') {
+            for (const id of val) {
+                let keyName = [key, '[]'].join('');
+                formData.append(keyName, id);
+            }
+        } else {
+            formData.set(key, val)
+        }
+    }
+
+    return axios({
+        method,
+        url,
+        data: formData
+    })
 }

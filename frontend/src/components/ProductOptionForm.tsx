@@ -21,6 +21,9 @@ import Typography from '@material-ui/core/Typography';
 import { submitProductOptionAction, getProductOptionAction, setProductOptionAction, clearSubmitProductOptionOutcomeAction } from "../store/features/productOption";
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        textAlign: 'center'
+    },
     form: {
         marginTop: theme.spacing(1),
     },
@@ -127,7 +130,8 @@ function ProductOptionForm({ productOption, success, errors, setProductOption, g
     }
 
     return (
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="sm" className={classes.root}>
+            <Typography component="h1" variant="h3">{optionId ? 'Edit' : 'Create'} Product Option</Typography>
             <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
                 {/* Option Name */}
                 <TextField

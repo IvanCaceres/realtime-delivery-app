@@ -3,13 +3,15 @@ import createSagaMiddleware from 'redux-saga'
 import { fork } from 'redux-saga/effects'
 import userReducer from './features/user/userFeatures'
 import { categoryReducer } from './features/category'
+import { reducer as productReducer } from './features/product'
 import { reducer as productOptionReducer } from './features/productOption'
 import watchLoginSaga, { checkToken, watchLogout } from './sagas/login'
-import { watchSubmitCategoryForm, watchGetCategory, watchGetProductOption, watchSubmitProductOptionForm } from './sagas/api'
+import { watchSubmitCategoryForm, watchGetCategory, watchGetProduct, watchGetProductOption, watchSubmitProductForm, watchSubmitProductOptionForm } from './sagas/api'
 
 const reducer = combineReducers({
     user: userReducer,
     category: categoryReducer,
+    product: productReducer,
     productOption: productOptionReducer,
 })
 
@@ -18,8 +20,10 @@ export default function* rootSaga() {
     yield fork(watchLoginSaga)
     yield fork(watchLogout)
     yield fork(watchGetCategory)
+    yield fork(watchGetProduct)
     yield fork(watchGetProductOption)
     yield fork(watchSubmitCategoryForm)
+    yield fork(watchSubmitProductForm)
     yield fork(watchSubmitProductOptionForm)
 }
 

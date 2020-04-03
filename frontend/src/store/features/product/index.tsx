@@ -1,19 +1,16 @@
 import { createSlice, createAction } from '@reduxjs/toolkit'
 
 const slice = createSlice({
-    name: 'productOption',
+    name: 'product',
     initialState: {
-        productOption: null,
-        productOptions: [],
+        product: null,
+        products: [],
         submitSuccess: null,
         submitError: null,
     },
     reducers: {
-        setProductOption(state, action) {
-            state.productOption = action.payload
-        },
-        setProductOptions(state, action) {
-            state.productOptions = action.payload
+        setProduct(state, action) {
+            state.product = action.payload
         },
         clearSubmitOutcome(state) {
             state.submitSuccess = null
@@ -37,6 +34,6 @@ const slice = createSlice({
 })
 
 export const reducer = slice.reducer
-export const { setSubmitOutcome: setSubmitProductOptionOutcomeAction, clearSubmitOutcome: clearSubmitProductOptionOutcomeAction, setProductOption: setProductOptionAction, setProductOptions: setProductOptionsAction } = slice.actions
-export const getProductOptionAction = createAction<any>('productOption/get')
-export const submitProductOptionAction = createAction<any>('productOption/submitForm')
+export const { setSubmitOutcome: setSubmitProductOutcomeAction, clearSubmitOutcome: clearSubmitProductOutcomeAction, setProduct: setProductAction } = slice.actions
+export const getProductAction = createAction<any>('product/get')
+export const submitProductAction = createAction<any>('product/submitForm')

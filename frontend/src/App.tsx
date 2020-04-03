@@ -18,6 +18,7 @@ import LoginForm from "./components/LoginForm"
 import Product from "./pages/Product";
 import ProductOptionForm from "./components/ProductOptionForm";
 import RegistrationForm from "./components/RegistrationForm"
+import ViewCategories from "./components/ViewCategories";
 
 const App: React.FC = () => {
   return (
@@ -28,8 +29,11 @@ const App: React.FC = () => {
             <Route exact path="/admin">
               <AdminDashboard />
             </Route>
-            <Route path={["/admin/category/edit/:id", "/admin/category"]}>
+            <Route exact path={["/admin/category/edit/:id", "/admin/category"]}>
               <CategoryForm />
+            </Route>
+            <Route exact path={"/admin/category/view"}>
+              <ViewCategories />
             </Route>
             <Route path="/admin/featured/add">
               <AddFeaturedItemForm />

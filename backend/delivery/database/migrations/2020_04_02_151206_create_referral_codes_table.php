@@ -29,7 +29,9 @@ class CreateReferralCodesTable extends Migration
      */
     public function down()
     {
-        $table->dropForeign(['user_id']);
+        Schema::table('referral_codes', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
         Schema::dropIfExists('referral_codes');
     }
 }

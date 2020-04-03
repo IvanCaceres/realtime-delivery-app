@@ -1,6 +1,9 @@
 import React from "react"
+import { connect } from 'react-redux'
+import { useParams, useHistory } from 'react-router-dom';
 
 // material ui components
+import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
@@ -11,10 +14,18 @@ import { makeStyles } from '@material-ui/core/styles'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
+import Typography from '@material-ui/core/Typography';
 
 import ImageUploader from '@ivancaceres/react-images-upload'
 
+import { submitProductAction, getProductAction, setProductAction, clearSubmitProductOutcomeAction } from "../store/features/product";
+import { getProductOptionAction } from './../store/features/productOption'
+import { getCategoryAction } from './../store/features/category'
+
 const useStyles = makeStyles(theme => ({
+    root: {
+        textAlign: 'center'
+    },
     imgUploader: {
         '& .fileContainer': {
             marginTop: 0,
@@ -37,21 +48,38 @@ const useStyles = makeStyles(theme => ({
 
 interface formErrors {
     productName: string | null,
-    category: string | null
+    category: string | null,
+    productOption: string | null
 }
 
-export default function AddProductForm() {
+interface formPayload {
+    name: string | null,
+    category_id: any[],
+    product_option_id: any[]
+    image?: File | null;
+}
+
+function AddProductForm({ categories, productOptions, getProductOption, getCategory, submitForm }: any) {
     // effects
     // set initial select label width
     React.useEffect(() => {
         setLabelWidth(inputLabel.current!.offsetWidth);
     }, []);
 
+    React.useEffect(() => {
+        let queryParams = {
+            per_page: 200
+        }
+        getCategory({ queryParams })
+        getProductOption({ queryParams })
+    }, [])
+
     const classes = useStyles()
 
     let formErrorsState = {
         productName: null,
         category: null,
+        productOption: null
     }
 
     const inputLabel = React.useRef<HTMLLabelElement>(null);
@@ -60,14 +88,16 @@ export default function AddProductForm() {
     // component state
     const [productImage, setProductImage] = React.useState<File | null>(null)
     const [defaultImage, setDefaultImage] = React.useState<string[] | undefined>(undefined)
+    const [productImageChanged, setProductImageChanged] = React.useState<boolean>(false)
     const [formErrors, setFormErrors] = React.useState<formErrors>(formErrorsState)
     // form submission loading
     const [loading, setLoading] = React.useState<boolean>(false)
     const [productCategories, setProductCategories] = React.useState<any[]>([])
+    const [selectedProductOptions, setSelectedProductOptions] = React.useState<any[]>([])
     const [productName, setProductName] = React.useState<string>('')
 
     function productImageChange(files: File[]) {
-        // setProductImageChanged(true)
+        setProductImageChanged(true)
         if (files.length > 0) {
             setProductImage(files[0]);
         } else {
@@ -89,13 +119,41 @@ export default function AddProductForm() {
         return
     }
 
-    const categoryOptions = (rooms: any) => rooms.map((room: any) => {
-        return <MenuItem key={room.id} value={room.id}>{room.name}</MenuItem>
-    })
+    function handleSubmit(event: any) {
+        event.preventDefault()
+        if (loading) {
+            return
+        }
+        setLoading(true)
+        let form: formPayload = {
+            name: productName,
+            category_id: productCategories,
+            product_option_id: selectedProductOptions
+        }
+
+        if (productImageChanged) {
+            form.image = productImage;
+        }
+        submitForm(form)
+    }
+
+    let categoryOptions
+    if (categories && categories.data) {
+        categoryOptions = categories.data.map((categoryModel: any) => {
+            return <MenuItem key={categoryModel.id} value={categoryModel.id}>{categoryModel.name}</MenuItem>
+        })
+    }
+
+    let productOptionOptions
+    if (productOptions && productOptions.data) {
+        productOptionOptions = productOptions.data.map((productOptionModel: any) => {
+            return <MenuItem key={productOptionModel.id} value={productOptionModel.id}>{productOptionModel.name}</MenuItem>
+        })
+    }
 
     return (
-        <Container component="main" maxWidth="sm">
-            <form>
+        <Container component="main" maxWidth="sm" className={classes.root}>
+            <form onSubmit={(e) => handleSubmit(e)}>
                 {/* Product Name */}
                 <TextField
                     error={!!formErrors['productName']}
@@ -138,7 +196,9 @@ export default function AddProductForm() {
                         required
                         multiple
                         value={productCategories}
-                        // onChange={handleChange('room_id')}
+                        onChange={(e: any) => {
+                            setProductCategories(e.target.value)
+                        }}
                         labelId="category-select-label"
                         labelWidth={labelWidth}
                         inputProps={{
@@ -146,9 +206,33 @@ export default function AddProductForm() {
                             id: 'outlined-category-native-simple',
                         }}
                     >
-                        {/* {roomsOptions(rooms)} */}
+                        {categoryOptions}
                     </Select>
                     <FormHelperText>Category must be selected.</FormHelperText>
+                </FormControl>
+
+                {/* Product Options */}
+                <FormControl required error={!!formErrors['productOption']} variant="outlined" fullWidth margin="normal">
+                    <InputLabel ref={inputLabel} id="productOption-select-label" htmlFor="outlined-productOption-native-simple">
+                        Product Options
+                    </InputLabel>
+                    <Select
+                        required
+                        multiple
+                        value={selectedProductOptions}
+                        onChange={(e: any) => {
+                            setSelectedProductOptions(e.target.value)
+                        }}
+                        labelId="productOption-select-label"
+                        labelWidth={labelWidth}
+                        inputProps={{
+                            name: 'productOption',
+                            id: 'outlined-productOption-native-simple',
+                        }}
+                    >
+                        {productOptionOptions}
+                    </Select>
+                    <FormHelperText>Select the Product Options available for this product.</FormHelperText>
                 </FormControl>
 
                 {/* form submit button */}
@@ -169,3 +253,26 @@ export default function AddProductForm() {
         </Container>
     )
 }
+
+function mapStateToProps(state: any) {
+    return {
+        categories: state.category.categories,
+        productOptions: state.productOption.productOptions,
+        product: state.product.product,
+        success: state.productOption.submitSuccess,
+        errors: state.productOption.submitError
+    }
+}
+
+const mapDispatch = {
+    setProduct: setProductAction,
+    submitForm: submitProductAction,
+    getCategory: getCategoryAction,
+    getProductOption: getProductOptionAction,
+    clearSubmitOutcome: clearSubmitProductOutcomeAction
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatch
+)(AddProductForm)
