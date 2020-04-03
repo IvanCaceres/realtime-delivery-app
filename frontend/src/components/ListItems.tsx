@@ -48,7 +48,7 @@ export const MainListItems = ({ callback }: { callback: any; }) => {
             <ListItemLink to="/admin/featured/add" primary="Add Featured Item" icon={<FeaturedVideoIcon />} />
             <ListItemLink to="/admin/category" primary="Add Category" icon={<CategoryIcon />} />
             <ListItemLink to="/admin/products/add" primary="Add Product" icon={<PostAddIcon />} />
-            <ListItemLink to="/admin/products/options" primary="Product Options" icon={<AddToPhotosIcon />} />
+            <ListItemLink to="/admin/productOption" primary="Product Options" icon={<AddToPhotosIcon />} />
             <ListItemLink to="/admin/referral/add" primary="Create Referral Codes" icon={<ConfirmationNumberIcon />} />
 
             {/* <ListItemLink to="/admin/conferences" primary="All Conferences" icon={<CalendarTodayIcon />} /> */}

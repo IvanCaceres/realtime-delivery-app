@@ -32,13 +32,24 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
     Route::get('/category/edit/{id}', function () {
         return view('welcome');
     });
+    Route::get('/productOption', function () {
+        return view('welcome');
+    });
+    Route::get('/productOption/edit/{id}', function () {
+        return view('welcome');
+    });
+
     Route::post('/category', 'CategoryController@create');
     Route::put('/category/{category}', 'CategoryController@edit');
+
     Route::post('/productOption', 'ProductOptionController@create');
+    Route::put('/productOption/{productOption}', 'ProductOptionController@edit');
+
     Route::post('/product', 'ProductsController@create');
     Route::get('/products/add', function () {
         return view('welcome');
     });
+
     Route::get('/', function () {
         return view('welcome');
     });

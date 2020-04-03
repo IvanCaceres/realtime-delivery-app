@@ -36,14 +36,50 @@ export const getCategory = (id) => {
 
 export const submitCategoryForm = (name, id) => {
     let url = '/admin/category'
+    let method = 'post'
 
     // edit category
     if (id) {
         url += `/${id}`
+        method = 'put'
     }
 
     return axios({
-        method: 'put',
+        method,
+        url,
+        data: {
+            name,
+        }
+    });
+}
+
+// product option
+export const getProductOption = (id) => {
+    // public route
+    // gets all categories if no id is provided
+    let url = '/api/productOption'
+    if (id) {
+        url += `/${id}`
+    }
+    return axios({
+        method: 'get',
+        url
+    });
+}
+
+
+export const submitProductOptionForm = (name, id) => {
+    let url = '/admin/productOption'
+    let method = 'post'
+
+    // edit productOption
+    if (id) {
+        url += `/${id}`
+        method = 'put'
+    }
+
+    return axios({
+        method,
         url,
         data: {
             name,

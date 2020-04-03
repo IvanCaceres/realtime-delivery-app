@@ -9,7 +9,6 @@ const categorySlice = createSlice({
     },
     reducers: {
         setCategory(state, action) {
-            console.log('setting category to ', action.payload)
             state.category = action.payload
         },
         clearSubmitOutcome(state) {

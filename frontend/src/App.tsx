@@ -37,7 +37,7 @@ const App: React.FC = () => {
             <Route path="/admin/products/add">
               <AddProductForm />
             </Route>
-            <Route path="/admin/products/options">
+            <Route path={["/admin/productOption/edit/:id", "/admin/productOption"]}>
               <ProductOptionForm />
             </Route>
             <Route path="/admin/referral/add">

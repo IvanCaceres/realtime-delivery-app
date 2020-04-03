@@ -40,7 +40,7 @@ interface formPayload {
     id?: string
 }
 
-function CategoryForm({ category, submitCategoryForm, success, errors, getCategory, setCategory }: any) {
+function CategoryForm({ category, submitCategoryForm, success, errors, getCategory, setCategory, clearSubmitOutcome }: any) {
     const classes = useStyles()
     let { id } = useParams()
     let history = useHistory()
@@ -61,7 +61,7 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
         return () => {
             // clear redux store category data
             setCategory(null)
-            clearSubmitOutcomeAction()
+            clearSubmitOutcome()
         }
     }, [])
 
@@ -76,7 +76,7 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
             setCategoryId(undefined)
             // clear store category data
             setCategory(null)
-            clearSubmitOutcomeAction()
+            clearSubmitOutcome()
         }
     }, [id])
 
@@ -93,7 +93,7 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
     // clear stale success/error messages when loading a new request
     React.useEffect(() => {
         if (loading) {
-            clearSubmitOutcomeAction()
+            clearSubmitOutcome()
         }
     }, [loading])
 
@@ -189,7 +189,8 @@ function mapStateToProps(state: any) {
 const mapDispatch = {
     setCategory: setCategoryAction,
     submitCategoryForm: submitCategoryFormAction,
-    getCategory: getCategoryAction
+    getCategory: getCategoryAction,
+    clearSubmitOutcome: clearSubmitOutcomeAction
 }
 
 export default connect(

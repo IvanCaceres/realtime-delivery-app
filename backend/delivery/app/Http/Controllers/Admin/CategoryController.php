@@ -7,7 +7,7 @@ use App\Category;
 
 class CategoryController {
 
-    // create new product
+    // create new category
     public function create(Request $request)
     {
         $validator = $request->validate([
@@ -21,7 +21,7 @@ class CategoryController {
         return $category;
     }
 
-    // edit product
+    // edit category
     public function edit(Request $request, Category $category)
     {
         $validator = $request->validate([
