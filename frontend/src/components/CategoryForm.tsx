@@ -20,7 +20,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 
 // redux
-import { submitCategoryFormAction } from './../store/features/category'
+import { submitCategoryFormAction, getCategoryAction, setCategoryAction, clearSubmitOutcomeAction } from './../store/features/category'
 
 const useStyles = makeStyles(theme => ({
     form: {
@@ -35,7 +35,12 @@ interface formErrors {
     categoryName: string | null,
 }
 
-function CategoryForm({ submitCategoryForm, success, errors }: any) {
+interface formPayload {
+    name: string,
+    id?: string
+}
+
+function CategoryForm({ category, submitCategoryForm, success, errors, getCategory, setCategory }: any) {
     const classes = useStyles()
     let { id } = useParams()
     let history = useHistory()
@@ -53,28 +58,42 @@ function CategoryForm({ submitCategoryForm, success, errors }: any) {
 
     // effects
     React.useEffect(() => {
-        console.log('only on component mount')
         return () => {
-            console.log('component was unmounted')
+            // clear redux store category data
+            setCategory(null)
+            clearSubmitOutcomeAction()
         }
     }, [])
 
+    // id effect
     React.useEffect(() => {
-        console.log('id was updated', id)
         // fetch category if we don't have it
-        if (id) {
+        if (id && !category) {
             setCategoryId(id)
+            getCategory(id)
         }
-        return () => {
-            console.log('id effect clean up')
+        if (!id) {
             setCategoryId(undefined)
+            // clear store category data
+            setCategory(null)
+            clearSubmitOutcomeAction()
         }
     }, [id])
 
-    // clear previous success/error messages when loading a new request
+    // category data model effect
+    React.useEffect(() => {
+        if (category) {
+            setCategoryName(category.name)
+        }
+        return () => {
+            setCategoryName('')
+        }
+    }, [category])
+
+    // clear stale success/error messages when loading a new request
     React.useEffect(() => {
         if (loading) {
-
+            clearSubmitOutcomeAction()
         }
     }, [loading])
 
@@ -99,7 +118,12 @@ function CategoryForm({ submitCategoryForm, success, errors }: any) {
         setLoading(true)
         let formData = {
             name: categoryName
+        } as formPayload
+
+        if (categoryId) {
+            formData.id = categoryId
         }
+
         submitCategoryForm(formData)
     }
 
@@ -156,13 +180,16 @@ function CategoryForm({ submitCategoryForm, success, errors }: any) {
 
 function mapStateToProps(state: any) {
     return {
+        category: state.category.category,
         success: state.category.submitCategoryFormSuccess,
         errors: state.category.submitCategoryFormError
     }
 }
 
 const mapDispatch = {
-    submitCategoryForm: submitCategoryFormAction
+    setCategory: setCategoryAction,
+    submitCategoryForm: submitCategoryFormAction,
+    getCategory: getCategoryAction
 }
 
 export default connect(

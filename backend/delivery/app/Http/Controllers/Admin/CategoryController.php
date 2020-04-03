@@ -20,4 +20,16 @@ class CategoryController {
         $category->save();
         return $category;
     }
+
+    // edit product
+    public function edit(Request $request, Category $category)
+    {
+        $validator = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        
+        $category->name = $request->input('name');
+        $category->save();
+    }
 }

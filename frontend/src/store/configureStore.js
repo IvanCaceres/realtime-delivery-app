@@ -4,7 +4,7 @@ import { fork } from 'redux-saga/effects'
 import userReducer from './features/user/userFeatures'
 import { categoryReducer } from './features/category'
 import watchLoginSaga, { checkToken, watchLogout } from './sagas/login'
-import { watchSubmitCategoryForm } from './sagas/api'
+import { watchSubmitCategoryForm, watchGetCategory } from './sagas/api'
 
 const reducer = combineReducers({
     user: userReducer,
@@ -15,6 +15,7 @@ export default function* rootSaga() {
     // yield checkToken()
     yield fork(watchLoginSaga)
     yield fork(watchLogout)
+    yield fork(watchGetCategory)
     yield fork(watchSubmitCategoryForm)
 }
 

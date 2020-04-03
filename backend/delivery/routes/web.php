@@ -33,6 +33,7 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
         return view('welcome');
     });
     Route::post('/category', 'CategoryController@create');
+    Route::put('/category/{category}', 'CategoryController@edit');
     Route::post('/productOption', 'ProductOptionController@create');
     Route::post('/product', 'ProductsController@create');
     Route::get('/products/add', function () {

@@ -22,7 +22,9 @@ export const logout = () => {
 
 // category
 export const getCategory = (id) => {
-    let url = '/category'
+    // public route
+    // gets all categories if no id is provided
+    let url = '/api/category'
     if (id) {
         url += `/${id}`
     }
@@ -32,10 +34,17 @@ export const getCategory = (id) => {
     });
 }
 
-export const submitCategoryForm = (name) => {
+export const submitCategoryForm = (name, id) => {
+    let url = '/admin/category'
+
+    // edit category
+    if (id) {
+        url += `/${id}`
+    }
+
     return axios({
-        method: 'post',
-        url: '/admin/category',
+        method: 'put',
+        url,
         data: {
             name,
         }
