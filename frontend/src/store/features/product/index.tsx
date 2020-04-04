@@ -4,13 +4,16 @@ const slice = createSlice({
     name: 'product',
     initialState: {
         product: null,
-        products: [],
+        products: null,
         submitSuccess: null,
         submitError: null,
     },
     reducers: {
         setProduct(state, action) {
             state.product = action.payload
+        },
+        setProducts(state, action) {
+            state.products = action.payload
         },
         clearSubmitOutcome(state) {
             state.submitSuccess = null
@@ -34,6 +37,6 @@ const slice = createSlice({
 })
 
 export const reducer = slice.reducer
-export const { setSubmitOutcome: setSubmitProductOutcomeAction, clearSubmitOutcome: clearSubmitProductOutcomeAction, setProduct: setProductAction } = slice.actions
+export const { setSubmitOutcome: setSubmitProductOutcomeAction, clearSubmitOutcome: clearSubmitProductOutcomeAction, setProduct: setProductAction, setProducts: setProductsAction } = slice.actions
 export const getProductAction = createAction<any>('product/get')
 export const submitProductAction = createAction<any>('product/submitForm')

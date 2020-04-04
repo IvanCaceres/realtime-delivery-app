@@ -57,7 +57,7 @@ export const submitCategoryForm = (name, id) => {
 // product option
 export const getProductOption = (id, queryParams) => {
     // public route
-    // gets all categories if no id is provided
+    // gets all product options if no id is provided
     let url = '/api/productOption'
     if (id) {
         url += `/${id}`
@@ -90,20 +90,34 @@ export const submitProductOptionForm = (name, id) => {
 }
 
 // product
+export const getProduct = (id, queryParams) => {
+    // public route
+    // gets all products if no id is provided
+    let url = '/api/product'
+    if (id) {
+        url += `/${id}`
+    }
+    return axios({
+        method: 'get',
+        params: queryParams,
+        url
+    });
+}
 
 export const submitProductForm = (form) => {
     let method = 'post'
-
     let url = '/admin/product'
 
+    // setup request FormData
+    let formData = new FormData();
+    console.log('submit product form', form)
     if (form.id) {
         // add put field to FormData
         formData.set('_method', 'PUT')
         url += `/${form.id}`
     }
 
-    // setup request FormData
-    let formData = new FormData();
+
 
     for (const [key, val] of Object.entries(form)) {
         if (key === 'category_id' || key === 'product_option_id') {

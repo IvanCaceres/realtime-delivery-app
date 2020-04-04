@@ -71,9 +71,11 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
     // id effect
     React.useEffect(() => {
         // fetch category if we don't have it
-        if (id && !category) {
+        if (id) {
             setCategoryId(id)
-            getCategory({ id })
+            if (!category) {
+                getCategory({ id })
+            }
         }
         if (!id) {
             setCategoryId(undefined)

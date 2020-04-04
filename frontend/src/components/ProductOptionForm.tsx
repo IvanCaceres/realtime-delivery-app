@@ -4,7 +4,6 @@ import { useParams, useHistory } from 'react-router-dom';
 
 // material ui components
 import Alert from '@material-ui/lab/Alert';
-import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -61,7 +60,7 @@ function ProductOptionForm({ productOption, success, errors, setProductOption, g
     // effects
     React.useEffect(() => {
         return () => {
-            // clear redux store category data
+            // clear redux store product option data
             setProductOption(null)
             clearSubmitOutcome()
         }
@@ -69,20 +68,22 @@ function ProductOptionForm({ productOption, success, errors, setProductOption, g
 
     // id effect
     React.useEffect(() => {
-        // fetch category if we don't have it
-        if (id && !productOption) {
+        // fetch product option if we don't have it
+        if (id) {
             setOptionId(id)
-            getProductOption(id)
+            if (!productOption) {
+                getProductOption({ id })
+            }
         }
         if (!id) {
             setOptionId(undefined)
-            // clear store category data
+            // clear store product option data
             setProductOption(null)
             clearSubmitOutcome()
         }
     }, [id])
 
-    // category data model effect
+    // product option data model effect
     React.useEffect(() => {
         if (productOption) {
             setOptionName(productOption.name)

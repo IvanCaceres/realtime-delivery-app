@@ -5,6 +5,7 @@ import { useParams, useHistory } from 'react-router-dom';
 // material ui components
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button'
+import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import FormControl from '@material-ui/core/FormControl'
@@ -56,16 +57,43 @@ interface formPayload {
     name: string | null,
     category_id: any[],
     product_option_id: any[]
-    image?: File | null;
+    image?: File | null,
+    id?: string | null
 }
 
-function AddProductForm({ categories, productOptions, getProductOption, getCategory, submitForm }: any) {
+function AddProductForm({ product, categories, productOptions, getProductOption, getCategory, submitForm, setProduct, getProduct, clearSubmitOutcome, success, errors }: any) {
+    const classes = useStyles()
+    let { id } = useParams()
+    let history = useHistory()
+
+    const [labelWidth, setLabelWidth] = React.useState(0);
+
+
+    let formErrorsState = {
+        productName: null,
+        category: null,
+        productOption: null
+    }
+
+    // component state
+    const [productImage, setProductImage] = React.useState<File | null>(null)
+    const [defaultImage, setDefaultImage] = React.useState<string[] | undefined>(undefined)
+    const [productId, setProductId] = React.useState<string | undefined>(undefined)
+    const [productImageChanged, setProductImageChanged] = React.useState<boolean>(false)
+    const [formErrors, setFormErrors] = React.useState<formErrors>(formErrorsState)
+    // form submission loading
+    const [loading, setLoading] = React.useState<boolean>(false)
+    const [productCategories, setProductCategories] = React.useState<any[]>([])
+    const [selectedProductOptions, setSelectedProductOptions] = React.useState<any[]>([])
+    const [productName, setProductName] = React.useState<string>('')
+
     // effects
     // set initial select label width
     React.useEffect(() => {
         setLabelWidth(inputLabel.current!.offsetWidth);
     }, []);
 
+    // fetch categories and options
     React.useEffect(() => {
         let queryParams = {
             per_page: 200
@@ -74,27 +102,90 @@ function AddProductForm({ categories, productOptions, getProductOption, getCateg
         getProductOption({ queryParams })
     }, [])
 
-    const classes = useStyles()
+    React.useEffect(() => {
+        return () => {
+            // clear redux store product data
+            setProduct(null)
+            clearSubmitOutcome()
+        }
+    }, [])
 
-    let formErrorsState = {
-        productName: null,
-        category: null,
-        productOption: null
-    }
+    // id effect
+    React.useEffect(() => {
+        // fetch product if we don't have it
+        if (id) {
+            console.log('setting product id', id)
+            setProductId(id)
+            if (!product) {
+                getProduct({ id })
+            }
+        }
+        if (!id) {
+            setProductId(undefined)
+            // clear store product data
+            setProduct(null)
+            clearSubmitOutcome()
+        }
+    }, [id])
+
+    // product data model effect
+    React.useEffect(() => {
+        if (product) {
+            setProductName(product.name)
+            setProductId(product.id)
+            //setup product image
+            if (product.image) {
+                setDefaultImage([`/storage/${product.image}`])
+            }
+
+            // set selected categories and options
+            if (product.categories) {
+                let categoryIds = []
+                for (const category of product.categories) {
+                    categoryIds.push(category.id)
+                }
+                setProductCategories(categoryIds)
+            }
+
+            if (product.options) {
+                let optionIds = []
+                for (const option of product.options) {
+                    optionIds.push(option.id)
+                }
+                setSelectedProductOptions(optionIds)
+            }
+        }
+        return () => {
+            setProductName('')
+            setProductImage(null)
+            setDefaultImage(undefined)
+            setSelectedProductOptions([])
+            setProductCategories([])
+            setProductImageChanged(false)
+            setProductId(undefined)
+            setFormErrors(formErrorsState)
+        }
+    }, [product])
+
+    // clear stale success/error messages when loading a new request
+    React.useEffect(() => {
+        if (loading) {
+            clearSubmitOutcome()
+        }
+    }, [loading])
+
+    // turn off loading when a form submission response is received
+    React.useEffect(() => {
+        if (success && success.id) {
+            // if we received a created model id navigate to edit with id
+            history.push(`/admin/product/edit/${success.id}`)
+        }
+        return () => {
+            setLoading(false)
+        }
+    }, [success, errors])
 
     const inputLabel = React.useRef<HTMLLabelElement>(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
-
-    // component state
-    const [productImage, setProductImage] = React.useState<File | null>(null)
-    const [defaultImage, setDefaultImage] = React.useState<string[] | undefined>(undefined)
-    const [productImageChanged, setProductImageChanged] = React.useState<boolean>(false)
-    const [formErrors, setFormErrors] = React.useState<formErrors>(formErrorsState)
-    // form submission loading
-    const [loading, setLoading] = React.useState<boolean>(false)
-    const [productCategories, setProductCategories] = React.useState<any[]>([])
-    const [selectedProductOptions, setSelectedProductOptions] = React.useState<any[]>([])
-    const [productName, setProductName] = React.useState<string>('')
 
     function productImageChange(files: File[]) {
         setProductImageChanged(true)
@@ -131,6 +222,12 @@ function AddProductForm({ categories, productOptions, getProductOption, getCateg
             product_option_id: selectedProductOptions
         }
 
+        console.log('handle submit', productId)
+
+        if (productId) {
+            form.id = productId
+        }
+
         if (productImageChanged) {
             form.image = productImage;
         }
@@ -153,6 +250,7 @@ function AddProductForm({ categories, productOptions, getProductOption, getCateg
 
     return (
         <Container component="main" maxWidth="sm" className={classes.root}>
+            <Typography component="h1" variant="h3">{productId ? 'Edit' : 'Create'} Product</Typography>
             <form onSubmit={(e) => handleSubmit(e)}>
                 {/* Product Name */}
                 <TextField
@@ -249,6 +347,17 @@ function AddProductForm({ categories, productOptions, getProductOption, getCateg
 
                 {/* loader */}
                 {loading && <CircularProgress />}
+
+                {/* error / success messages */}
+                <Box mb={2}>
+                    {success ? <Alert variant="outlined" severity="success" children={'Changes saved.'} /> : null}
+
+                    {
+                        errors ? errors.map((e: string, index: number) => (
+                            <Box mb={2} key={index}><Alert variant="outlined" severity="error" children={e} /></Box>
+                        )) : null
+                    }
+                </Box>
             </form>
         </Container>
     )
@@ -259,14 +368,15 @@ function mapStateToProps(state: any) {
         categories: state.category.categories,
         productOptions: state.productOption.productOptions,
         product: state.product.product,
-        success: state.productOption.submitSuccess,
-        errors: state.productOption.submitError
+        success: state.product.submitSuccess,
+        errors: state.product.submitError
     }
 }
 
 const mapDispatch = {
     setProduct: setProductAction,
     submitForm: submitProductAction,
+    getProduct: getProductAction,
     getCategory: getCategoryAction,
     getProductOption: getProductOptionAction,
     clearSubmitOutcome: clearSubmitProductOutcomeAction

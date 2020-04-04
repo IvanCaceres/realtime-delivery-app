@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import { submitCategoryFormAction, setSubmitCategoryFormOutcome, getCategoryAction, setCategoryAction, setCategoriesAction } from './../features/category'
 import { getCategory, getProduct, getProductOption, submitCategoryForm, submitProductForm, submitProductOptionForm } from './../../providers/Api'
-import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction } from '../features/product'
+import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
 import { submitProductOptionAction, setSubmitProductOptionOutcomeAction, getProductOptionAction, setProductOptionAction, setProductOptionsAction } from '../features/productOption'
 
 // category
@@ -26,6 +26,7 @@ function* submitCategoryFormSaga({ payload }) {
         let success = true
         if (res.data) {
             success = res.data
+            yield put(setCategoryAction(res.data))
         }
         yield put(setSubmitCategoryFormOutcome({ success }))
     } catch (error) {
@@ -53,6 +54,7 @@ function* submitCategoryFormSaga({ payload }) {
     }
 }
 
+// productOption
 function* getProductOptionSaga({ payload }) {
     try {
         const { id, queryParams } = payload
@@ -67,7 +69,6 @@ function* getProductOptionSaga({ payload }) {
     }
 }
 
-// productOption
 function* submitProductOptionSaga({ payload }) {
     try {
         const { name, id } = payload
@@ -75,6 +76,7 @@ function* submitProductOptionSaga({ payload }) {
         let success = true
         if (res.data) {
             success = res.data
+            yield put(setProductOptionAction(res.data))
         }
         yield put(setSubmitProductOptionOutcomeAction({ success }))
     } catch (error) {
@@ -82,7 +84,6 @@ function* submitProductOptionSaga({ payload }) {
         // grab all error messages
         let errors = []
         if (error.response.data) {
-            console.log(error.response)
             if (error.response.data.message) {
                 errors.push(error.response.data.message)
             }
@@ -103,10 +104,15 @@ function* submitProductOptionSaga({ payload }) {
 }
 
 // product
-function* getProductSaga({ payload: id }) {
+function* getProductSaga({ payload }) {
     try {
-        const res = yield call(getProductOption, id)
-        yield put(setProductOptionAction(res.data))
+        const { id, queryParams } = payload
+        const res = yield call(getProduct, id, queryParams)
+        if (id) {
+            yield put(setProductAction(res.data))
+        } else {
+            yield put(setProductsAction(res.data))
+        }
     } catch (error) {
         console.error(error)
     }
@@ -116,9 +122,9 @@ function* submitProductSaga({ payload }) {
     try {
         const res = yield call(submitProductForm, payload)
         let success = true
-        console.log('show product form res', res)
         if (res.data) {
             success = res.data
+            yield put(setProductAction(res.data))
         }
         yield put(setSubmitProductOutcomeAction({ success }))
     } catch (error) {

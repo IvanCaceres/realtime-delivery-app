@@ -52,11 +52,11 @@ export const MainListItems = ({ callback }: { callback: any; }) => {
             <ListItemLink to="/admin/category" primary="Add" icon={<CategoryIcon />} />
             <ListItemLink to="/admin/category/view" primary="View All" icon={<CategoryIcon />} />
             <ListSubheader inset>Products</ListSubheader>
-            <ListItemLink to="/admin/products/add" primary="Add Product" icon={<PostAddIcon />} />
-            <ListItemLink to="/admin/products/add" primary="View Products" icon={<PostAddIcon />} />
+            <ListItemLink to="/admin/product" primary="Add Product" icon={<PostAddIcon />} />
+            <ListItemLink to="/admin/product/view" primary="View Products" icon={<PostAddIcon />} />
             <ListSubheader inset>Product Options</ListSubheader>
             <ListItemLink to="/admin/productOption" primary="Add" icon={<AddToPhotosIcon />} />
-            <ListItemLink to="/admin/productOption" primary="View All" icon={<AddToPhotosIcon />} />
+            <ListItemLink to="/admin/productOption/view" primary="View All" icon={<AddToPhotosIcon />} />
             <ListSubheader inset>Referral Codes</ListSubheader>
             <ListItemLink to="/admin/referral/add" primary="Generate" icon={<ConfirmationNumberIcon />} />
             <ListItemLink to="/admin/referral/add" primary="View All" icon={<ConfirmationNumberIcon />} />
