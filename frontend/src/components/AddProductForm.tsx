@@ -4,8 +4,8 @@ import { useParams, useHistory } from 'react-router-dom';
 
 // material ui components
 import Alert from '@material-ui/lab/Alert';
-import Button from '@material-ui/core/Button'
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import FormControl from '@material-ui/core/FormControl'
@@ -13,8 +13,8 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import MenuItem from '@material-ui/core/MenuItem'
-import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 
 import ImageUploader from '@ivancaceres/react-images-upload'
@@ -114,7 +114,6 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
     React.useEffect(() => {
         // fetch product if we don't have it
         if (id) {
-            console.log('setting product id', id)
             setProductId(id)
             if (!product) {
                 getProduct({ id })
@@ -340,7 +339,6 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                // disabled={disableSaveButton()}
                 >
                     Save
                 </Button>

@@ -80,9 +80,11 @@ class ProductsController {
 
             $product->save();
             
-            // all changes succeeded delete old image
-            if ($oldImagePath) {
-                Storage::disk('public')->delete($oldImagePath);
+            if ($hasImageField) {
+                // all changes succeeded delete old image
+                if ($oldImagePath) {
+                    Storage::disk('public')->delete($oldImagePath);
+                }
             }
         });
     }

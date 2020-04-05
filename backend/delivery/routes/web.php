@@ -35,6 +35,15 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
     Route::get('/category/edit/{id}', function () {
         return view('welcome');
     });
+    Route::get('/featured', function () {
+        return view('welcome');
+    });
+    Route::get('/featured/view', function () {
+        return view('welcome');
+    });
+    Route::get('/featured/edit/{id}', function () {
+        return view('welcome');
+    });
     Route::get('/product', function () {
         return view('welcome');
     });
@@ -62,6 +71,9 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
 
     Route::post('/product', 'ProductsController@create');
     Route::put('/product/{product}', 'ProductsController@edit');
+
+    Route::post('/featuredItem', 'FeaturedItemController@create');
+    Route::put('/featuredItem/{featuredItem}', 'FeaturedItemController@edit');
 
     Route::get('/', function () {
         return view('welcome');

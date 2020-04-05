@@ -46,8 +46,8 @@ export const MainListItems = ({ callback }: { callback: any; }) => {
             <ListItemLink to="/" primary="Home" icon={<HomeIcon />} />
             <ListItemLink to="/admin" primary="Dashboard" icon={<DashboardIcon />} />
             <ListSubheader inset>Featured Items</ListSubheader>
-            <ListItemLink to="/admin/featured/add" primary="Add" icon={<FeaturedVideoIcon />} />
-            <ListItemLink to="/admin/featured/add" primary="View All" icon={<FeaturedVideoIcon />} />
+            <ListItemLink to="/admin/featured" primary="Add" icon={<FeaturedVideoIcon />} />
+            <ListItemLink to="/admin/featured/view" primary="View All" icon={<FeaturedVideoIcon />} />
             <ListSubheader inset>Categories</ListSubheader>
             <ListItemLink to="/admin/category" primary="Add" icon={<CategoryIcon />} />
             <ListItemLink to="/admin/category/view" primary="View All" icon={<CategoryIcon />} />
@@ -58,8 +58,8 @@ export const MainListItems = ({ callback }: { callback: any; }) => {
             <ListItemLink to="/admin/productOption" primary="Add" icon={<AddToPhotosIcon />} />
             <ListItemLink to="/admin/productOption/view" primary="View All" icon={<AddToPhotosIcon />} />
             <ListSubheader inset>Referral Codes</ListSubheader>
-            <ListItemLink to="/admin/referral/add" primary="Generate" icon={<ConfirmationNumberIcon />} />
-            <ListItemLink to="/admin/referral/add" primary="View All" icon={<ConfirmationNumberIcon />} />
+            <ListItemLink to="/admin/referral" primary="Generate" icon={<ConfirmationNumberIcon />} />
+            <ListItemLink to="/admin/referral/view" primary="View All" icon={<ConfirmationNumberIcon />} />
 
             {/* <ListItemLink to="/admin/conferences" primary="All Conferences" icon={<CalendarTodayIcon />} /> */}
             {/* <ListItemLink to="/admin/rooms" primary="Rooms" icon={<MeetingRoomIcon />} /> */}

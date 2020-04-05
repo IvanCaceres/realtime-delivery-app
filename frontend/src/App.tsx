@@ -37,7 +37,7 @@ const App: React.FC = () => {
             <Route exact path={"/admin/category/view"}>
               <ViewCategories />
             </Route>
-            <Route path="/admin/featured/add">
+            <Route exact path={["/admin/featured/edit/:id", "/admin/featured"]}>
               <AddFeaturedItemForm />
             </Route>
             <Route exact path={"/admin/product/view"}>

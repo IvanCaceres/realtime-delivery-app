@@ -89,6 +89,46 @@ export const submitProductOptionForm = (name, id) => {
     });
 }
 
+// featured
+export const getFeatured = (id, queryParams) => {
+    // public route
+    // gets all featured items if no id is provided
+    console.log('getFeatured API')
+    let url = '/api/featuredItem'
+    if (id) {
+        url += `/${id}`
+    }
+    return axios({
+        method: 'get',
+        params: queryParams,
+        url
+    });
+}
+
+export const submitFeaturedForm = (form) => {
+    let method = 'post'
+    let url = '/admin/featuredItem'
+
+    // setup request FormData
+    let formData = new FormData();
+    console.log('submit featured form', form)
+    if (form.id) {
+        // add put field to FormData, allows laravel to spoof and detect PUT request
+        formData.set('_method', 'PUT')
+        url += `/${form.id}`
+    }
+
+    for (const [key, val] of Object.entries(form)) {
+        formData.set(key, val)
+    }
+
+    return axios({
+        method,
+        url,
+        data: formData
+    })
+}
+
 // product
 export const getProduct = (id, queryParams) => {
     // public route
@@ -110,7 +150,6 @@ export const submitProductForm = (form) => {
 
     // setup request FormData
     let formData = new FormData();
-    console.log('submit product form', form)
     if (form.id) {
         // add put field to FormData
         formData.set('_method', 'PUT')

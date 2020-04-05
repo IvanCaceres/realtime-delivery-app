@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 
 Route::get('/category/{category?}', 'Api\CategoryController@get');
 
+Route::get('/featuredItem/{featuredItem?}', 'Api\FeaturedItemController@get');
+
 Route::get('/productOption/{productOption?}', 'Api\ProductOptionController@get');
 
 Route::get('/product/{product?}', 'Api\ProductController@get');
