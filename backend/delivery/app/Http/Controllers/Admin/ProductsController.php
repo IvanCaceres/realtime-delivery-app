@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController {
 
@@ -47,7 +48,6 @@ class ProductsController {
 
         $validationRules = [
             'name' => 'required|string',
-            'image' => 'file|image',
             'category_id' => 'required|array',
             'category_id.*' => 'numeric',
             'product_option_id' => 'required|array',

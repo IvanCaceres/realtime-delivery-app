@@ -8,7 +8,7 @@ use App\Product;
 class ProductController {
 
     // get product
-    public function get(Request $request, $product)
+    public function get(Request $request, Product $product = null)
     {   
         if ($product) {
             return Product::with(['options', 'categories'])->findOrFail($product);

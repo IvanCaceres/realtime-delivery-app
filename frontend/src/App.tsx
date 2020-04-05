@@ -19,6 +19,7 @@ import Product from "./pages/Product";
 import ProductOptionForm from "./components/ProductOptionForm";
 import RegistrationForm from "./components/RegistrationForm"
 import ViewCategories from "./components/ViewCategories";
+import ViewProducts from "./components/ViewProducts";
 import ViewProductOptions from "./components/ViewProductOptions";
 
 const App: React.FC = () => {
@@ -38,6 +39,9 @@ const App: React.FC = () => {
             </Route>
             <Route path="/admin/featured/add">
               <AddFeaturedItemForm />
+            </Route>
+            <Route exact path={"/admin/product/view"}>
+              <ViewProducts />
             </Route>
             <Route exact path={["/admin/product/edit/:id", "/admin/product"]}>
               <AddProductForm />
