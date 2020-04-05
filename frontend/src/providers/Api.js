@@ -2,7 +2,6 @@ import axios from 'axios'
 
 // login
 export const login = (username, password) => {
-    console.log('login api action', username, password)
     return axios({
         method: 'post',
         url: '/login',
@@ -93,7 +92,6 @@ export const submitProductOptionForm = (name, id) => {
 export const getFeatured = (id, queryParams) => {
     // public route
     // gets all featured items if no id is provided
-    console.log('getFeatured API')
     let url = '/api/featuredItem'
     if (id) {
         url += `/${id}`
@@ -111,7 +109,6 @@ export const submitFeaturedForm = (form) => {
 
     // setup request FormData
     let formData = new FormData();
-    console.log('submit featured form', form)
     if (form.id) {
         // add put field to FormData, allows laravel to spoof and detect PUT request
         formData.set('_method', 'PUT')

@@ -2,7 +2,7 @@ import { call, put, takeEvery } from 'redux-saga/effects'
 import { submitCategoryFormAction, setSubmitCategoryFormOutcome, getCategoryAction, setCategoryAction, setCategoriesAction } from './../features/category'
 import { getCategory, getProduct, getProductOption, submitCategoryForm, getFeatured, submitFeaturedForm, submitProductForm, submitProductOptionForm } from './../../providers/Api'
 import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
-import { setFeaturedAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
+import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
 import { submitProductOptionAction, setSubmitProductOptionOutcomeAction, getProductOptionAction, setProductOptionAction, setProductOptionsAction } from '../features/productOption'
 
 // category
@@ -35,7 +35,6 @@ function* submitCategoryFormSaga({ payload }) {
         // grab all error messages
         let errors = []
         if (error.response.data) {
-            console.log(error.response)
             if (error.response.data.message) {
                 errors.push(error.response.data.message)
             }
@@ -108,12 +107,11 @@ function* submitProductOptionSaga({ payload }) {
 function* getFeaturedSaga({ payload }) {
     try {
         const { id, queryParams } = payload
-        console.log('running get featured')
         const res = yield call(getFeatured, id, queryParams)
         if (id) {
             yield put(setFeaturedAction(res.data))
         } else {
-            yield put(setFeaturedAction(res.data))
+            yield put(setFeaturedItemsAction(res.data))
         }
     } catch (error) {
         console.error(error)
@@ -124,7 +122,6 @@ function* submitFeaturedSaga({ payload }) {
     try {
         const res = yield call(submitFeaturedForm, payload)
         let success = true
-        console.log('submit feature response', res)
         if (res.data) {
             success = res.data
             yield put(setFeaturedAction(res.data))
