@@ -54,7 +54,7 @@ function ViewProducts({ getProducts, products }: any) {
             header: 'Id',
             renderFn: (rowData: any) => {
                 return (
-                    <Link component={RouterLink} to={`/admin/productOption/edit/${rowData.id}`}>{rowData.id}</Link>
+                    <Link component={RouterLink} to={`/admin/product/edit/${rowData.id}`}>{rowData.id}</Link>
                 )
             }
         },
@@ -63,7 +63,7 @@ function ViewProducts({ getProducts, products }: any) {
             header: 'Name',
             renderFn: (rowData: any) => {
                 return (
-                    <Link component={RouterLink} to={`/admin/productOption/edit/${rowData.id}`}>{rowData.name}</Link>
+                    <Link component={RouterLink} to={`/admin/product/edit/${rowData.id}`}>{rowData.name}</Link>
                 )
             }
         }
