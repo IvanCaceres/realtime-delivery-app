@@ -11,7 +11,8 @@ import {
     submitFeaturedForm,
     submitProductForm,
     submitProductOptionForm,
-    submitReferralCodeForm
+    submitReferralCodeForm,
+    submitOrder
 } from './../../providers/Api'
 import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
 import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
@@ -22,6 +23,7 @@ import {
     getHomeContentAction,
     setHomeProductsAction
 } from './../features/system'
+import { submitOrderAction, setSubmitOrderOutcomeAction } from '../features/cart'
 
 
 // get home content
@@ -255,7 +257,6 @@ function* submitReferralCodeFormSaga({ payload }) {
         let success = true
         if (res.data) {
             success = res.data
-            // yield put(setReferralCodeAction(res.data))
         }
         yield put(setSubmitReferralCodeFormOutcomeAction({ success }))
     } catch (error) {
@@ -282,6 +283,39 @@ function* submitReferralCodeFormSaga({ payload }) {
     }
 }
 
+function* submitOrderSaga({ payload }) {
+    try {
+        const res = yield call(submitOrder, payload)
+        let success = true
+        // if (res.data) {
+        // success = res.data
+        // yield put(setProductAction(res.data))
+        // }
+        yield put(setSubmitOrderOutcomeAction({ success }))
+    } catch (error) {
+        console.error(error)
+        // grab all error messages
+        let errors = []
+        if (error.response.data) {
+            if (error.response.data.message) {
+                errors.push(error.response.data.message)
+            }
+            if (error.response.data.errors) {
+                // loop through errors object
+                // loop through error messages for each field
+                for (const fieldErrors of Object.values(error.response.data.errors)) {
+                    errors.push(...fieldErrors)
+                }
+            }
+        }
+
+        if (errors.length === 0) {
+            errors.push('Error submitting product form.')
+        }
+        yield put(setSubmitOrderOutcomeAction({ errors }))
+    }
+}
+
 // watchers
 export function* watchGetHomeContent() {
     yield takeEvery(getHomeContentAction.toString(), getHomeContentSaga)
@@ -305,6 +339,10 @@ export function* watchGetProductOption() {
 
 export function* watchGetReferralCode() {
     yield takeEvery(getReferralCodeAction.toString(), getReferralCodeSaga)
+}
+
+export function* watchSubmitOrder() {
+    yield takeEvery(submitOrderAction.toString(), submitOrderSaga)
 }
 
 export function* watchSubmitReferralCodeForm() {

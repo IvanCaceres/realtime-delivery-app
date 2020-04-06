@@ -223,3 +223,15 @@ export const submitReferralCodeForm = (quantity) => {
         }
     });
 }
+
+// order
+export const submitOrder = (form) => {
+    let method = 'post'
+    let url = '/order'
+
+    return axios({
+        method,
+        url,
+        data: form
+    })
+}

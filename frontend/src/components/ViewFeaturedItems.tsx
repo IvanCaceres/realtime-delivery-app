@@ -70,7 +70,6 @@ function ViewProducts({ getFeaturedItems, featuredItems }: any) {
     ]
 
     let tableRender
-    console.log('show featuredItems', featuredItems)
     if (featuredItems) {
         tableRender = <Table columns={columns} data={featuredItems.data} count={featuredItems.total} rowsPerPage={rowsPerPage} onChangeRowsPerPage={handleRowsPerPageChange} onChangePage={handleChangePage} page={page} />
     }

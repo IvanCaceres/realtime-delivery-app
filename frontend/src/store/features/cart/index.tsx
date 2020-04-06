@@ -4,6 +4,8 @@ const slice = createSlice({
     name: 'cart',
     initialState: {
         cart: [],
+        submitSuccess: null,
+        submitError: null
     },
     reducers: {
         addCartItem(state: any, action: any) {
@@ -20,9 +22,29 @@ const slice = createSlice({
                 }
                 return true
             })
+        },
+        clearSubmitOutcome(state) {
+            state.submitSuccess = null
+            state.submitError = null
+        },
+        setSubmitOutcome(state, action) {
+            const { success, errors } = action.payload
+            if (success) {
+                state.submitSuccess = success
+            } else {
+                state.submitSuccess = null
+            }
+
+            if (errors) {
+                state.submitError = errors
+            } else {
+                state.submitError = null
+            }
         }
     }
 })
 
 export const reducer = slice.reducer
-export const { addCartItem, clearCart, removeFromCart } = slice.actions
+export const { addCartItem, clearCart, removeFromCart, clearSubmitOutcome: clearSubmitOrderOutcomeAction, setSubmitOutcome: setSubmitOrderOutcomeAction } = slice.actions
+export const submitOrderAction = createAction<any>('cart/submitOrder')
+export const getOrderAction = createAction<any>('order/get')

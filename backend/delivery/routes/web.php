@@ -12,14 +12,13 @@ use Illuminate\Http\Request;
 |
 */
 
-// Auth Routes
+// Auth Related Routes
 Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::post('/register', 'Auth\RegisterController@register')->name('register');
-Route::get('/user', function(Request $request) {
-    return $request->user();
-});
 
+
+// public view routes
 Route::get('/', function () {
     return view('welcome');
 });
@@ -34,6 +33,14 @@ Route::get('/register', function () {
 
 Route::get('/cart', function () {
     return view('welcome');
+});
+
+// regular auth protected user routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/order', 'OrderController@create');
+    Route::get('/user', function(Request $request) {
+        return $request->user();
+    });
 });
 
 // Admin Routes

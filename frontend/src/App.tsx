@@ -76,7 +76,6 @@ const App: React.FC = ({ login, user }: any) => {
       </Route>
     )
   }
-  console.log('show adminRoutes', adminRoutes)
   return (
     <Router>
       <Switch>

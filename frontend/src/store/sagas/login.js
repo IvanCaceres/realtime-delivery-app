@@ -19,7 +19,6 @@ function* authorize({ payload }) {
         if (history) {
             history.push('/')
         }
-        console.log('show login resp', authResp)
         yield put(setUser(authResp.data))
         // return token
     } catch (error) {
