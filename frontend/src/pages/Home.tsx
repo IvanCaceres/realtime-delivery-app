@@ -29,7 +29,7 @@ const Home: React.FC = ({ featured, products, getHomeContent }: any) => {
 
   return (
     <div>
-      <FeaturedTiles featured={featured} />
+      <FeaturedTiles featured={featured} />.
       <Box mt={3}>
         <Grid container spacing={3}>
           {productCards}

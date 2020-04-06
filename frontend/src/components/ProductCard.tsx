@@ -8,6 +8,13 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import FormHelperText from '@material-ui/core/FormHelperText'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
+import TextField from '@material-ui/core/TextField'
+
 import { addCartItem, removeFromCart } from "../store/features/cart";
 
 const useStyles = makeStyles({
@@ -34,7 +41,10 @@ const useStyles = makeStyles({
     }
 });
 
-
+interface formErrors {
+    option: string | null,
+    customOrderMessage: string | null
+}
 
 function ProductCard({
     title,
@@ -44,7 +54,9 @@ function ProductCard({
     item,
     addToCart,
     cart,
-    removeFromCart
+    removeFromCart,
+    options,
+    onOptionSelected
 }: {
     title: string;
     image: string;
@@ -54,9 +66,31 @@ function ProductCard({
     addToCart?: any;
     cart?: any[];
     removeFromCart?: any;
+    options?: any[],
+    onOptionSelected?: any;
 }) {
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
+
+    let formErrorsState = {
+        option: null,
+        customOrderMessage: null
+    }
+    // state
+    const [labelWidth, setLabelWidth] = React.useState(0);
+    const [formErrors, setFormErrors] = React.useState<formErrors>(formErrorsState)
+    const [optionSelected, setOptionSelected] = React.useState<string>('')
+    const [customOrderMessage, setCustomOrderMessage] = React.useState<string>('')
+
+    const inputLabel = React.useRef<HTMLLabelElement>(null);
+
+    // effects
+    // set initial select label width
+    React.useEffect(() => {
+        if (options) {
+            setLabelWidth(inputLabel.current!.offsetWidth);
+        }
+    }, [options]);
 
     function handleAddToCart() {
         addToCart(item)
@@ -72,6 +106,18 @@ function ProductCard({
         }
         return false
     })
+
+    let productOptionsRender
+
+    if (options) {
+        productOptionsRender = options.map((option: any) => {
+            return <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+        })
+    }
+
+    function optionSelectedUpdated(value: string) {
+        onOptionSelected(value, item.id)
+    }
 
     return (
         <Card className={classes.root}>
@@ -90,6 +136,51 @@ function ProductCard({
                 <Typography variant="body2" component="p">
                     <b className={classes.price}>{price}</b>
                 </Typography>
+
+                {/* product options */}
+                {options && <FormControl required error={!!formErrors['option']} variant="outlined" fullWidth margin="normal">
+                    <InputLabel ref={inputLabel} id="option-select-label" htmlFor="outlined-option-native-simple">
+                        Product Option
+                    </InputLabel>
+                    <Select
+                        required
+                        value={optionSelected}
+                        onChange={(e: any) => {
+                            setOptionSelected(e.target.value)
+                            optionSelectedUpdated(e.target.value)
+                        }}
+                        labelId="option-select-label"
+                        labelWidth={labelWidth}
+                        inputProps={{
+                            name: 'options',
+                            id: 'outlined-option-native-simple',
+                        }}
+                    >
+                        {productOptionsRender}
+                    </Select>
+                    <FormHelperText>Option must be selected.</FormHelperText>
+                </FormControl>
+                }
+                {
+                    optionSelected === 'Custom' &&
+                    // custom order message
+                    <TextField
+                        error={!!formErrors['customOrderMessage']}
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="customOrderMessage"
+                        label="Custom order message"
+                        name="customOrderMessage"
+                        autoComplete="off"
+                        value={customOrderMessage}
+                        onChange={(e) => {
+                            setCustomOrderMessage(e?.target.value)
+                            optionSelectedUpdated(e.target.value)
+                        }}
+                    />
+                }
             </CardContent>
             <CardActions>
                 {!inCart ?

@@ -16,6 +16,7 @@ import CategoryForm from "./components/CategoryForm"
 import Category from "./pages/Category";
 import GenerateReferralCodesForm from './components/GenerateReferralCodesForm'
 import Home from "./pages/Home";
+import Cart from "./pages/Cart";
 import LoginForm from "./components/LoginForm"
 import Product from "./pages/Product";
 import ProductOptionForm from "./components/ProductOptionForm";
@@ -85,6 +86,9 @@ const App: React.FC = ({ login, user }: any) => {
           <Route path="/login" children={<LoginForm />} />
           {/* <Route path="/product/:productId" children={<Product />} /> */}
           {/* <Route path="/:category" children={<Category />} /> */}
+          <Route exact path="/cart">
+            <Cart />
+          </Route>
           <Route exact path="/">
             <Home />
           </Route>

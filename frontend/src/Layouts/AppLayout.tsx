@@ -38,7 +38,7 @@ function ButtonAppBar({ children, cart, user }: any) {
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="home" component={Link} to="/">
                         <HomeIcon />
                     </IconButton>
                     {
@@ -51,7 +51,7 @@ function ButtonAppBar({ children, cart, user }: any) {
                     {!user ? <Button color="inherit" component={Link} to="/login">Login</Button> : null}
                     {(user && user.admin || !user) ? <Button color="inherit" component={Link} to="/register">Register</Button> : null}
                     {user ? <Button color="inherit" component={Link} to="/login">Logout</Button> : null}
-                    <IconButton edge="end" className={classes.cart} color="inherit" aria-label="cart">
+                    <IconButton edge="end" className={classes.cart} color="inherit" aria-label="cart" component={Link} to="/cart">
                         <Badge badgeContent={cart.length} color="secondary">
                             <ShoppingCartIcon />
                         </Badge>

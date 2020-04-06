@@ -32,6 +32,10 @@ Route::get('/register', function () {
     return view('welcome');
 });
 
+Route::get('/cart', function () {
+    return view('welcome');
+});
+
 // Admin Routes
 Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->group(function () {
     Route::get('/category', function () {
