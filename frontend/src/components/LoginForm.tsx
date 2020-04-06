@@ -1,5 +1,6 @@
 import React from "react"
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom';
 
 // material ui components
 import Avatar from '@material-ui/core/Avatar';
@@ -39,6 +40,7 @@ interface formErrors {
 
 function LoginForm({ login }: any) {
     const classes = useStyles()
+    const history = useHistory()
 
     let formErrorsState = {
         username: null,
@@ -62,7 +64,7 @@ function LoginForm({ login }: any) {
             username,
             password
         }
-        login(loginData)
+        login({ loginData, history })
     }
 
     return (

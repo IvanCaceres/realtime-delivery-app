@@ -5,12 +5,13 @@ import { login as loginActionCreator, logout as logoutActionCreator } from './..
 
 function* authorize({ payload }) {
     try {
-        const { username, password } = payload
+        const { loginData, history } = payload
+        const { username, password } = loginData
         const authResp = yield call(login, username, password)
         // let token = authResp.data.access_token
         // yield localStorage.setItem('token', token);
         // yield put(cacheToken(token))
-        // history.push('/admin')
+        history.push('/')
         // yield call(login.storeItem, { token })
         // return token
     } catch (error) {
