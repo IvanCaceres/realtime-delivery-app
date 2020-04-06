@@ -7,12 +7,12 @@ const images = [
     {
         url: '/static/images/grid-list/breakfast.jpg',
         title: 'Breakfast',
-        width: '40%',
+        width: '25%',
     },
     {
         url: '/static/images/grid-list/burgers.jpg',
         title: 'Burgers',
-        width: '30%',
+        width: '25%',
     },
     {
         url: '/static/images/grid-list/camera.jpg',
@@ -96,25 +96,25 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function ButtonBases() {
+export default function ButtonBases({ featured }: any) {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            {images.map((image) => (
+            {featured && featured.map((featuredItem: any) => (
                 <ButtonBase
                     focusRipple
-                    key={image.title}
+                    key={featuredItem.id}
                     className={classes.image}
                     focusVisibleClassName={classes.focusVisible}
                     style={{
-                        width: image.width,
+                        width: '25%',
                     }}
                 >
                     <span
                         className={classes.imageSrc}
                         style={{
-                            backgroundImage: `url(${image.url})`,
+                            backgroundImage: `url("/storage/${featuredItem.image}")`,
                         }}
                     />
                     <span className={classes.imageBackdrop} />
@@ -125,7 +125,7 @@ export default function ButtonBases() {
                             color="inherit"
                             className={classes.imageTitle}
                         >
-                            {image.title}
+                            {featuredItem.title}
                             <span className={classes.imageMarked} />
                         </Typography>
                     </span>

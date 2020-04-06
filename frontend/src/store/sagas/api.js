@@ -1,6 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import { submitCategoryFormAction, setSubmitCategoryFormOutcome, getCategoryAction, setCategoryAction, setCategoriesAction } from './../features/category'
 import {
+    getHomeContent,
     getCategory,
     getProduct,
     getProductOption,
@@ -16,6 +17,29 @@ import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, s
 import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
 import { submitProductOptionAction, setSubmitProductOptionOutcomeAction, getProductOptionAction, setProductOptionAction, setProductOptionsAction } from '../features/productOption'
 import { setReferralCodesAction, setSubmitReferralCodeFormOutcomeAction, submitReferralCodeFormAction, getReferralCodeAction } from './../features/referralCode'
+import {
+    setHomeFeaturedAction,
+    getHomeContentAction,
+    setHomeProductsAction
+} from './../features/system'
+
+
+// get home content
+function* getHomeContentSaga({ payload }) {
+    try {
+        const res = yield call(getHomeContent)
+        if (res.data) {
+            if (res.data.featured) {
+                yield put(setHomeFeaturedAction(res.data.featured))
+            }
+            if (res.data.products) {
+                yield put(setHomeProductsAction(res.data.products))
+            }
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 // category
 function* getCategorySaga({ payload }) {
@@ -259,6 +283,10 @@ function* submitReferralCodeFormSaga({ payload }) {
 }
 
 // watchers
+export function* watchGetHomeContent() {
+    yield takeEvery(getHomeContentAction.toString(), getHomeContentSaga)
+}
+
 export function* watchGetCategory() {
     yield takeEvery(getCategoryAction.toString(), getCategorySaga)
 }

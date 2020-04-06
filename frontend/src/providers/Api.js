@@ -32,6 +32,17 @@ export const submitRegisterForm = (form) => {
     });
 }
 
+// home content
+export const getHomeContent = () => {
+    // public route
+    // gets all home content (featured tiles and products)
+    let url = '/api/home'
+    return axios({
+        method: 'get',
+        url
+    });
+}
+
 // category
 export const getCategory = (id, queryParams) => {
     // public route
