@@ -252,7 +252,8 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
     }
 
     return (
-        <Container component="main" maxWidth="sm">
+        <Container component="main" maxWidth="sm" className={classes.root}>
+            <Typography component="h1" variant="h3">{featuredId ? 'Edit' : 'Create'} Featured Item</Typography>
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
                 {/* Product Name */}
                 <TextField

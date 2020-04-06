@@ -6,8 +6,20 @@ import { categoryReducer } from './features/category'
 import { reducer as productReducer } from './features/product'
 import { reducer as featuredReducer } from './features/featured'
 import { reducer as productOptionReducer } from './features/productOption'
+import { reducer as referralCodeReducer } from './features/referralCode'
 import watchLoginSaga, { checkToken, watchLogout } from './sagas/login'
-import { watchSubmitCategoryForm, watchGetFeatured, watchGetCategory, watchGetProduct, watchGetProductOption, watchSubmitFeaturedForm, watchSubmitProductForm, watchSubmitProductOptionForm } from './sagas/api'
+import {
+    watchSubmitCategoryForm,
+    watchGetFeatured,
+    watchGetCategory,
+    watchGetProduct,
+    watchGetProductOption,
+    watchSubmitFeaturedForm,
+    watchSubmitProductForm,
+    watchSubmitProductOptionForm,
+    watchSubmitReferralCodeForm,
+    watchGetReferralCode
+} from './sagas/api'
 
 const reducer = combineReducers({
     user: userReducer,
@@ -15,6 +27,7 @@ const reducer = combineReducers({
     featured: featuredReducer,
     product: productReducer,
     productOption: productOptionReducer,
+    referralCode: referralCodeReducer
 })
 
 export default function* rootSaga() {
@@ -25,10 +38,12 @@ export default function* rootSaga() {
     yield fork(watchGetFeatured)
     yield fork(watchGetProduct)
     yield fork(watchGetProductOption)
+    yield fork(watchGetReferralCode)
     yield fork(watchSubmitCategoryForm)
     yield fork(watchSubmitFeaturedForm)
     yield fork(watchSubmitProductForm)
     yield fork(watchSubmitProductOptionForm)
+    yield fork(watchSubmitReferralCodeForm)
 }
 
 const sagaMiddleware = createSagaMiddleware()

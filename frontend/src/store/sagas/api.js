@@ -1,9 +1,21 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import { submitCategoryFormAction, setSubmitCategoryFormOutcome, getCategoryAction, setCategoryAction, setCategoriesAction } from './../features/category'
-import { getCategory, getProduct, getProductOption, submitCategoryForm, getFeatured, submitFeaturedForm, submitProductForm, submitProductOptionForm } from './../../providers/Api'
+import {
+    getCategory,
+    getProduct,
+    getProductOption,
+    getReferralCode,
+    submitCategoryForm,
+    getFeatured,
+    submitFeaturedForm,
+    submitProductForm,
+    submitProductOptionForm,
+    submitReferralCodeForm
+} from './../../providers/Api'
 import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
 import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
 import { submitProductOptionAction, setSubmitProductOptionOutcomeAction, getProductOptionAction, setProductOptionAction, setProductOptionsAction } from '../features/productOption'
+import { setReferralCodesAction, setSubmitReferralCodeFormOutcomeAction, submitReferralCodeFormAction, getReferralCodeAction } from './../features/referralCode'
 
 // category
 function* getCategorySaga({ payload }) {
@@ -200,6 +212,52 @@ function* submitProductSaga({ payload }) {
     }
 }
 
+// referral code
+function* getReferralCodeSaga({ payload }) {
+    try {
+        const { queryParams } = payload
+        const res = yield call(getReferralCode, queryParams)
+
+        yield put(setReferralCodesAction(res.data))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+function* submitReferralCodeFormSaga({ payload }) {
+    try {
+        const { quantity } = payload
+        const res = yield call(submitReferralCodeForm, quantity)
+        let success = true
+        if (res.data) {
+            success = res.data
+            // yield put(setReferralCodeAction(res.data))
+        }
+        yield put(setSubmitReferralCodeFormOutcomeAction({ success }))
+    } catch (error) {
+        console.error(error)
+        // grab all error messages
+        let errors = []
+        if (error.response.data) {
+            if (error.response.data.message) {
+                errors.push(error.response.data.message)
+            }
+            if (error.response.data.errors) {
+                // loop through errors object
+                // loop through error messages for each field
+                for (const fieldErrors of Object.values(error.response.data.errors)) {
+                    errors.push(...fieldErrors)
+                }
+            }
+        }
+
+        if (errors.length === 0) {
+            errors.push('Error submitting referral code form.')
+        }
+        yield put(setSubmitReferralCodeFormOutcomeAction({ errors }))
+    }
+}
+
 // watchers
 export function* watchGetCategory() {
     yield takeEvery(getCategoryAction.toString(), getCategorySaga)
@@ -215,6 +273,14 @@ export function* watchGetProduct() {
 
 export function* watchGetProductOption() {
     yield takeEvery(getProductOptionAction.toString(), getProductOptionSaga)
+}
+
+export function* watchGetReferralCode() {
+    yield takeEvery(getReferralCodeAction.toString(), getReferralCodeSaga)
+}
+
+export function* watchSubmitReferralCodeForm() {
+    yield takeEvery(submitReferralCodeFormAction.toString(), submitReferralCodeFormSaga)
 }
 
 export function* watchSubmitCategoryForm() {

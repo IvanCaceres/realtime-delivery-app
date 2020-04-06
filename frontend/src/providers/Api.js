@@ -172,3 +172,30 @@ export const submitProductForm = (form) => {
         data: formData
     })
 }
+
+// referral code
+export const getReferralCode = (queryParams) => {
+    // private admine route
+    // gets all referral codes
+    let url = '/admin/referralCode'
+
+    return axios({
+        method: 'get',
+        params: queryParams,
+        url
+    });
+}
+
+
+export const submitReferralCodeForm = (quantity) => {
+    let url = '/admin/referralCode'
+    let method = 'post'
+
+    return axios({
+        method,
+        url,
+        data: {
+            quantity,
+        }
+    });
+}

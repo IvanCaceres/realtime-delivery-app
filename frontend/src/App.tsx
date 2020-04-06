@@ -56,7 +56,7 @@ const App: React.FC = () => {
             <Route exact path={["/admin/productOption/edit/:id", "/admin/productOption"]}>
               <ProductOptionForm />
             </Route>
-            <Route path="/admin/referral/add">
+            <Route path="/admin/referral">
               <GenerateReferralCodesForm />
             </Route>
           </AdminLayout>
