@@ -19,6 +19,19 @@ export const logout = () => {
     });
 }
 
+export const submitRegisterForm = (form) => {
+    let url = '/register'
+    let method = 'post'
+
+    return axios({
+        method,
+        url,
+        data: {
+            ...form
+        }
+    });
+}
+
 // category
 export const getCategory = (id, queryParams) => {
     // public route

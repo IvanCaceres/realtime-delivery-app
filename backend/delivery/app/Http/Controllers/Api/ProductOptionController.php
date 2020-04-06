@@ -20,6 +20,6 @@ class ProductOptionController {
             $per_page = $request->input('per_page');
         }
 
-        return ProductOption::paginate($per_page);;
+        return ProductOption::orderBy('id')->paginate($per_page);;
     }
 }

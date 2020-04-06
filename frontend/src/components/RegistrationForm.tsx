@@ -1,6 +1,8 @@
 import React from "react"
+import { connect } from 'react-redux'
 
 // material ui components
+import Alert from '@material-ui/lab/Alert';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
@@ -18,6 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import MuiPhoneNumber from 'material-ui-phone-number'
 
 import ImageUploader from '@ivancaceres/react-images-upload'
+import { submitRegisterFormAction, clearRegisterSubmitOutcomeAction } from "../store/features/system";
 
 const useStyles = makeStyles(theme => ({
     avatar: {
@@ -43,10 +46,16 @@ interface formErrors {
     phoneNumber: string | null,
 }
 
-export default function AddProductForm() {
-    const classes = useStyles()
+interface formPayload {
+    username: string,
+    password: string,
+    password_confirmation: string,
+    referral_code: string,
+    phone: string
+}
 
-    // effects
+function RegistrationForm({ submitForm, success, errors, clearSubmitOutcome }: any) {
+    const classes = useStyles()
     let formErrorsState = {
         username: null,
         password: null,
@@ -54,11 +63,9 @@ export default function AddProductForm() {
         referralCode: null,
         phoneNumber: null
     }
-
     // component state
     const [confirmPassword, setConfirmPassword] = React.useState<string>('')
     const [formErrors, setFormErrors] = React.useState<formErrors>(formErrorsState)
-    const [labelWidth, setLabelWidth] = React.useState(0);
     // form submission loading indicator
     const [loading, setLoading] = React.useState<boolean>(false)
     const [password, setPassword] = React.useState<string>('')
@@ -66,9 +73,59 @@ export default function AddProductForm() {
     const [referralCode, setReferralCode] = React.useState<string>('')
     const [username, setUsername] = React.useState<string>('')
 
+    // effects
+
+    // on component unmount clear submission outcome store data
+    React.useEffect(() => {
+        return () => {
+            // clear redux store registerSubmitOutcome data
+            clearSubmitOutcome()
+        }
+    }, [])
+
+    // clear stale success/error messages when loading a new request
+    React.useEffect(() => {
+        if (loading) {
+            clearSubmitOutcome()
+        }
+    }, [loading])
+
+    // turn off loading when a form submission response is received
+    React.useEffect(() => {
+        // if registration successful clear current form
+        if (success) {
+            setUsername('')
+            setPassword('')
+            setConfirmPassword('')
+            setPhoneNumber('')
+            setReferralCode('')
+            setFormErrors(formErrorsState)
+        }
+        return () => {
+            setLoading(false)
+        }
+    }, [success, errors])
+
     function phoneNumberChange(value: string) {
-        console.log('phone change', value)
         setPhoneNumber(value)
+    }
+
+    function handleSubmit(event: any) {
+        event.preventDefault()
+        if (loading) {
+            return
+        }
+        setLoading(true)
+
+        let formData = {
+            username,
+            password,
+            password_confirmation: confirmPassword,
+            phone: phoneNumber,
+            referral_code: referralCode,
+        } as formPayload
+
+        submitForm(formData)
     }
 
     return (
@@ -81,7 +138,7 @@ export default function AddProductForm() {
                     Register
                 </Typography>
             </Box>
-            <form className={classes.form}>
+            <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
                 {/* Username */}
                 <TextField
                     error={!!formErrors['username']}
@@ -139,6 +196,7 @@ export default function AddProductForm() {
                     margin="normal"
                     error={!!formErrors['phoneNumber']}
                     label="Phone Number"
+                    value={phoneNumber}
                     onChange={phoneNumberChange}
                     countryCodeEditable={false}
                 />
@@ -167,14 +225,41 @@ export default function AddProductForm() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                // disabled={disableSaveButton()}
                 >
                     Register
                 </Button>
 
                 {/* loader */}
                 {loading && <CircularProgress />}
+
+                {/* error / success messages */}
+                <Box mb={2}>
+                    {success ? <Alert variant="outlined" severity="success" children={'User account successfully registered.'} /> : null}
+
+                    {
+                        errors ? errors.map((e: string, index: number) => (
+                            <Box mb={2} key={index}><Alert variant="outlined" severity="error" children={e} /></Box>
+                        )) : null
+                    }
+                </Box>
             </form>
         </Container>
     )
 }
+
+function mapStateToProps(state: any) {
+    return {
+        success: state.system.registerSubmitSuccess,
+        errors: state.system.registerSubmitError
+    }
+}
+
+const mapDispatch = {
+    submitForm: submitRegisterFormAction,
+    clearSubmitOutcome: clearRegisterSubmitOutcomeAction
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatch
+)(RegistrationForm)

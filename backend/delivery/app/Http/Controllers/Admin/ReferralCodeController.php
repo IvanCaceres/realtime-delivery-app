@@ -18,7 +18,7 @@ class ReferralCodeController {
             $per_page = $request->input('per_page');
         }
 
-        return ReferralCode::with(['user'])->paginate($per_page);
+        return ReferralCode::with(['user'])->orderBy('id')->paginate($per_page);
     }
 
     // create new referral code
@@ -28,7 +28,7 @@ class ReferralCodeController {
             'quantity' => 'required|numeric|max:100',
         ]);
         
-        for ($x = 0; $x <= $request->input('quantity'); $x++) {
+        for ($x = 0; $x < $request->input('quantity'); $x++) {
             $refCode = new ReferralCode;
             $refCode->code = bin2hex(random_bytes(15));
             $refCode->save();

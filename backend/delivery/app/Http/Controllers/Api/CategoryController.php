@@ -19,6 +19,6 @@ class CategoryController {
         if ($request->has('per_page')) {
             $per_page = $request->input('per_page');
         }
-        return Category::paginate($per_page);
+        return Category::orderBy('id')->paginate($per_page);
     }
 }

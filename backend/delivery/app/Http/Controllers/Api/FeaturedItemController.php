@@ -20,6 +20,6 @@ class FeaturedItemController {
             $per_page = $request->input('per_page');
         }
 
-        return FeaturedItem::with(['featurable'])->paginate($per_page);
+        return FeaturedItem::with(['featurable'])->orderBy('id')->paginate($per_page);
     }
 }

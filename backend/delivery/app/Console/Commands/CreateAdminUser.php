@@ -65,7 +65,6 @@ class CreateAdminUser extends Command
 
         $user = new User;
         $user->username = 'admin';
-        $user->email = 'admin@admin';
         $user->password = Hash::make($this->password);
         $user->admin = true;
         $user->phone = '2122222222';
