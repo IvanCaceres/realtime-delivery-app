@@ -86,6 +86,7 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
     const [productCategories, setProductCategories] = React.useState<any[]>([])
     const [selectedProductOptions, setSelectedProductOptions] = React.useState<any[]>([])
     const [productName, setProductName] = React.useState<string>('')
+    const [remountKey, setRemountKey] = React.useState<string>('normal')
 
     // effects
     // set initial select label width
@@ -120,7 +121,6 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
             }
         }
         if (!id) {
-            setProductId(undefined)
             // clear store product data
             setProduct(null)
             clearSubmitOutcome()
@@ -153,11 +153,15 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
                 }
                 setSelectedProductOptions(optionIds)
             }
+        } else {
+            setDefaultImage(undefined)
         }
         return () => {
             setProductName('')
             setProductImage(null)
             setDefaultImage(undefined)
+            // must force remount image uploader component to ensure fresh preview
+            setRemountKey(`clearImage${Date.now()}`)
             setSelectedProductOptions([])
             setProductCategories([])
             setProductImageChanged(false)
@@ -221,8 +225,6 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
             product_option_id: selectedProductOptions
         }
 
-        console.log('handle submit', productId)
-
         if (productId) {
             form.id = productId
         }
@@ -247,6 +249,8 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
         })
     }
 
+    console.log('show image uploader ref', imageUploaderRef)
+
     return (
         <Container component="main" maxWidth="sm" className={classes.root}>
             <Typography component="h1" variant="h3">{productId ? 'Edit' : 'Create'} Product</Typography>
@@ -270,6 +274,7 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
                 {/* Product Image */}
                 <FormControl margin="normal" fullWidth>
                     <ImageUploader
+                        key={remountKey}
                         className={classes.imgUploader}
                         withIcon={true}
                         singleImage

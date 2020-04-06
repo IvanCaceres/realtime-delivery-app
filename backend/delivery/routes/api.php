@@ -21,6 +21,4 @@ Route::get('/productOption/{productOption?}', 'Api\ProductOptionController@get')
 
 Route::get('/product/{product?}', 'Api\ProductController@get');
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::get('/home', 'Api\HomeController@get');

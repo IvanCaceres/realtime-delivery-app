@@ -1,6 +1,7 @@
 import React from "react";
 import HomeContent from "../seed/home";
 import { Link } from "react-router-dom";
+import FeaturedTiles from './../components/FeaturedTiles'
 
 const Home: React.FC = () => {
   let contentTiles = [];
@@ -13,7 +14,11 @@ const Home: React.FC = () => {
       </div>
     );
   }
-  return <div>{contentTiles}</div>;
+  return (
+    <div>
+      <FeaturedTiles />
+      {contentTiles}
+    </div>);
 };
 
 export default Home;

@@ -85,6 +85,7 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
     // form submission loading
     const [loading, setLoading] = React.useState<boolean>(false)
     const [productSelected, setProductSelected] = React.useState<string>('')
+    const [remountKey, setRemountKey] = React.useState<string>('normal')
 
     // effects
     // set initial select label width
@@ -153,6 +154,8 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
             setFeaturedTitle('')
             setFeaturedImage(null)
             setDefaultImage(undefined)
+            // must force remount image uploader component to ensure fresh preview
+            setRemountKey(`clearImage${Date.now()}`)
             setCategorySelected('')
             setProductSelected('')
             setFeaturedImageChanged(false)
@@ -274,6 +277,7 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
                 {/* Product Image */}
                 <FormControl margin="normal" fullWidth>
                     <ImageUploader
+                        key={remountKey}
                         className={classes.imgUploader}
                         withIcon={true}
                         singleImage
