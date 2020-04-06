@@ -65,6 +65,9 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
     Route::get('/referral', function () {
         return view('welcome');
     });
+    Route::get('/referral/view', function () {
+        return view('welcome');
+    });
 
     Route::post('/category', 'CategoryController@create');
     Route::put('/category/{category}', 'CategoryController@edit');
@@ -78,6 +81,7 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
     Route::post('/featuredItem', 'FeaturedItemController@create');
     Route::put('/featuredItem/{featuredItem}', 'FeaturedItemController@edit');
 
+    Route::get('/referralCode', 'ReferralCodeController@index');
     Route::post('/referralCode', 'ReferralCodeController@create');
 
     Route::get('/', function () {

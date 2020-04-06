@@ -22,6 +22,7 @@ import ViewCategories from "./components/ViewCategories";
 import ViewProducts from "./components/ViewProducts";
 import ViewProductOptions from "./components/ViewProductOptions";
 import ViewFeaturedItems from "./components/ViewFeaturedItems";
+import ViewReferralCodes from './components/ViewReferralCodes'
 
 const App: React.FC = () => {
   return (
@@ -56,7 +57,10 @@ const App: React.FC = () => {
             <Route exact path={["/admin/productOption/edit/:id", "/admin/productOption"]}>
               <ProductOptionForm />
             </Route>
-            <Route path="/admin/referral">
+            <Route exact path="/admin/referral/view">
+              <ViewReferralCodes />
+            </Route>
+            <Route exact path="/admin/referral">
               <GenerateReferralCodesForm />
             </Route>
           </AdminLayout>
