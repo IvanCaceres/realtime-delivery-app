@@ -1,21 +1,29 @@
 import { take, call, put, cancelled, takeEvery } from 'redux-saga/effects'
 import { login, logout, submitRegisterForm } from './../../providers/Api'
-import { cacheToken } from './../features/user/userFeatures'
-import { login as loginActionCreator, logout as logoutActionCreator } from './../features/user/userFeatures'
+import { login as loginActionCreator, logout as logoutActionCreator, setUser } from './../features/user/userFeatures'
 import { setRegisterSubmitOutcomeAction, submitRegisterFormAction } from './../features/system'
 
 function* authorize({ payload }) {
     try {
-        const { loginData, history } = payload
+        if (!payload) {
+            payload = {}
+        }
+        let { loginData, history } = payload
+        if (!loginData) {
+            loginData = {}
+        }
         const { username, password } = loginData
         const authResp = yield call(login, username, password)
         // let token = authResp.data.access_token
         // yield localStorage.setItem('token', token);
-        // yield put(cacheToken(token))
-        history.push('/')
-        // yield call(login.storeItem, { token })
+        if (history) {
+            history.push('/')
+        }
+        console.log('show login resp', authResp)
+        yield put(setUser(authResp.data))
         // return token
     } catch (error) {
+        console.error(error)
         yield put({ type: 'LOGIN_ERROR', error })
     } finally {
         if (yield cancelled()) {
@@ -68,10 +76,10 @@ function* submitRegisterFormSaga({ payload }) {
 }
 
 
-export function* checkToken() {
-    const token = yield localStorage.getItem('token');
-    yield put(cacheToken(token))
-}
+// export function* checkToken() {
+//     const token = yield localStorage.getItem('token');
+//     yield put(cacheToken(token))
+// }
 
 export function* watchSubmitRegisterForm() {
     yield takeEvery(submitRegisterFormAction.toString(), submitRegisterFormSaga)

@@ -7,6 +7,7 @@ import { reducer as productReducer } from './features/product'
 import { reducer as featuredReducer } from './features/featured'
 import { reducer as productOptionReducer } from './features/productOption'
 import { reducer as referralCodeReducer } from './features/referralCode'
+import { reducer as cartReducer } from './features/cart'
 import { systemReducer } from './features/system'
 import watchLoginSaga, { checkToken, watchLogout, watchSubmitRegisterForm } from './sagas/login'
 import {
@@ -30,7 +31,8 @@ const reducer = combineReducers({
     product: productReducer,
     productOption: productOptionReducer,
     referralCode: referralCodeReducer,
-    system: systemReducer
+    system: systemReducer,
+    cart: cartReducer
 })
 
 export default function* rootSaga() {

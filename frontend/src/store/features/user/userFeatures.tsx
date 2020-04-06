@@ -3,11 +3,12 @@ import { createSlice, createAction } from '@reduxjs/toolkit'
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        token: null
+        user: null
     },
     reducers: {
-        cacheToken(state, action) {
-            state.token = action.payload
+        setUser(state, action) {
+            console.log('setting user', action.payload)
+            state.user = action.payload
         }
     }
 })
@@ -15,6 +16,6 @@ const userSlice = createSlice({
 export const login = createAction<any>('user/login')
 export const logout = createAction<any>('user/logout')
 
-export const { cacheToken } = userSlice.actions
+export const { setUser } = userSlice.actions
 
 export default userSlice.reducer

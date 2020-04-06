@@ -20,8 +20,8 @@ const Home: React.FC = ({ featured, products, getHomeContent }: any) => {
   if (products) {
     productCards = products.map((product: any) => {
       return (
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <ProductCard title={product.name} image={product.image} price="" manufacturer="" />
+        <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+          <ProductCard title={product.name} image={product.image} price="" manufacturer="" item={product} />
         </Grid>
       )
     })
