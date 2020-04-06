@@ -249,8 +249,6 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
         })
     }
 
-    console.log('show image uploader ref', imageUploaderRef)
-
     return (
         <Container component="main" maxWidth="sm" className={classes.root}>
             <Typography component="h1" variant="h3">{productId ? 'Edit' : 'Create'} Product</Typography>

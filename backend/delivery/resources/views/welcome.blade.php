@@ -39,5 +39,5 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  <script src="http://localhost:3000/static/js/bundle.js"></script><script src="http://localhost:3000/static/js/1.chunk.js"></script><script src="http://localhost:3000/static/js/main.chunk.js"></script><script src="http://localhost:3000/main.1dca19e861e74c093fa3.hot-update.js"></script></body>
+  <script src="http://localhost:3000/static/js/bundle.js"></script><script src="http://localhost:3000/static/js/0.chunk.js"></script><script src="http://localhost:3000/static/js/main.chunk.js"></script><script src="http://localhost:3000/main.83c0f7ec6091b38d49e0.hot-update.js"></script></body>
 </html>
