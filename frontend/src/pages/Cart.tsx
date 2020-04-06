@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
-import Box from '@material-ui/core/Box';
+import Alert from '@material-ui/lab/Alert'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Grid from "@material-ui/core/Grid";
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
 
-import HomeContent from "../seed/home";
-import { Link } from "react-router-dom";
+import HomeContent from "../seed/home"
+import { Link } from "react-router-dom"
 import FeaturedTiles from './../components/FeaturedTiles'
-import { getHomeContentAction } from "../store/features/system";
+import { getHomeContentAction } from "../store/features/system"
 import ProductCard from './../components/ProductCard'
-import GoogleMap from 'google-map-react';
+import GoogleMap from 'google-map-react'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +34,9 @@ const Cart: React.FC = ({ cart }: any) => {
 
   // geolocation watcher id
   const [watcherId, setWatcherId] = useState<number | null>(null)
+
+  // local form errors
+  const [formValidationErrors, setFormValidationErrors] = useState<string[]>([])
 
   // effects
   // get device geolocation on mount
@@ -99,7 +104,7 @@ const Cart: React.FC = ({ cart }: any) => {
   );
 
   function productOptionSelectedUpdated(value: string, productId: string) {
-    orderItems.map((orderItem: any) => {
+    setOrderItems(orderItems.map((orderItem: any) => {
       if (orderItem.id === productId) {
         return {
           ...orderItem,
@@ -107,7 +112,7 @@ const Cart: React.FC = ({ cart }: any) => {
         }
       }
       return orderItem
-    })
+    }))
   }
 
   let orderItemsRender
@@ -135,6 +140,33 @@ const Cart: React.FC = ({ cart }: any) => {
       })
     } else {
       alert("Sorry, geolocation is not available on your device. You need that to use this app");
+    }
+  }
+
+  function validate() {
+    let validationErrors = []
+    if (orderItems.length < 1) {
+      validationErrors.push('No products selected.')
+    }
+    // ensure every product has a selected option
+    for (const orderItem of orderItems) {
+      if (!orderItem.selectedOption) {
+        console.log('this order item doesnt have a selected option', orderItem)
+        validationErrors.push('Must select an order option for every product in cart.')
+        break;
+      }
+    }
+    setFormValidationErrors(validationErrors)
+
+    if (validationErrors.length > 0) {
+      return validationErrors
+    }
+    return false
+  }
+
+  function handleOrderSubmit() {
+    if (validate()) {
+      return
     }
   }
 
@@ -178,6 +210,35 @@ const Cart: React.FC = ({ cart }: any) => {
           </Typography>
           {orderItems.length > 0 ? orderItemsRender : <Typography variant="body1" color="inherit" noWrap>No items in cart.</Typography>}
         </Box>
+
+
+        {/* error / success messages */}
+        <Box mb={2}>
+          {/* {success ? <Alert variant="outlined" severity="success" children={'Changes saved.'} /> : null} */}
+          {
+            formValidationErrors.map((formValidationError: string) => {
+              return (
+                <Box mb={2} key={formValidationError}><Alert variant="outlined" severity="error" children={formValidationError} /></Box>
+              )
+            })
+          }
+          {/* {
+            errors ? errors.map((e: string, index: number) => (
+              <Box mb={2} key={index}><Alert variant="outlined" severity="error" children={e} /></Box>
+            )) : null
+          } */}
+        </Box>
+
+        <Box my={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOrderSubmit}
+          >
+            Submit Order
+          </Button>
+        </Box>
+
       </Container>
     </div >
   );
