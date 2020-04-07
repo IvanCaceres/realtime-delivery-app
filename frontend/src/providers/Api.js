@@ -225,6 +225,14 @@ export const submitReferralCodeForm = (quantity) => {
 }
 
 // order
+export const getOrder = () => {
+    let url = '/order'
+    return axios({
+        method: 'get',
+        url
+    });
+}
+
 export const submitOrder = (form) => {
     let method = 'post'
     let url = '/order'

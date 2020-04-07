@@ -56,7 +56,9 @@ function ProductCard({
     cart,
     removeFromCart,
     options,
-    onOptionSelected
+    onOptionSelected,
+    cartButton = false,
+    infoString = '',
 }: {
     title: string;
     image: string;
@@ -68,6 +70,8 @@ function ProductCard({
     removeFromCart?: any;
     options?: any[],
     onOptionSelected?: any;
+    cartButton?: boolean;
+    infoString?: string;
 }) {
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
@@ -115,8 +119,8 @@ function ProductCard({
         })
     }
 
-    function optionSelectedUpdated(value: string) {
-        onOptionSelected(value, item.id)
+    function optionSelectedUpdated(value: number | string, custom = false) {
+        onOptionSelected(value, item.id, custom)
     }
 
     return (
@@ -177,13 +181,16 @@ function ProductCard({
                         value={customOrderMessage}
                         onChange={(e) => {
                             setCustomOrderMessage(e?.target.value)
-                            optionSelectedUpdated(e.target.value)
+                            optionSelectedUpdated(e.target.value, true)
                         }}
                     />
                 }
+                <Typography variant="body2" component="p">
+                    <b>{infoString}</b>
+                </Typography>
             </CardContent>
             <CardActions>
-                {!inCart ?
+                {cartButton && (!inCart ?
                     <Button variant="contained" color="primary" onClick={handleAddToCart}>
                         Add to Cart
                     </Button>
@@ -191,7 +198,7 @@ function ProductCard({
                     <Button variant="contained" color="secondary" onClick={remove}>
                         Remove from Cart
                     </Button>
-                }
+                )}
             </CardActions>
         </Card>
     );

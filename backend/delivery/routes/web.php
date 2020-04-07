@@ -31,15 +31,20 @@ Route::get('/register', function () {
     return view('welcome');
 });
 
-Route::get('/cart', function () {
-    return view('welcome');
-});
+
 
 // regular auth protected user routes
 Route::middleware(['auth'])->group(function () {
+    Route::get('/order', 'OrderController@get');
     Route::post('/order', 'OrderController@create');
     Route::get('/user', function(Request $request) {
         return $request->user();
+    });
+    Route::get('/cart', function () {
+        return view('welcome');
+    });
+    Route::get('/trackOrder', function () {
+        return view('welcome');
     });
 });
 

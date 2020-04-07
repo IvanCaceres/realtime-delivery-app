@@ -47,4 +47,3 @@ const slice = createSlice({
 export const reducer = slice.reducer
 export const { addCartItem, clearCart, removeFromCart, clearSubmitOutcome: clearSubmitOrderOutcomeAction, setSubmitOutcome: setSubmitOrderOutcomeAction } = slice.actions
 export const submitOrderAction = createAction<any>('cart/submitOrder')
-export const getOrderAction = createAction<any>('order/get')

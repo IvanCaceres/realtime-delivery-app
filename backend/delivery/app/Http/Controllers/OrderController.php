@@ -13,18 +13,25 @@ class OrderController {
     // create new user order
     public function create(Request $request)
     {
+        $user = $request->user();
+        $username = $user->username;
+        $cacheOrderKey = $username . '_order'; 
+
+        if (Cache::tags([$username, 'orders'])->get($cacheOrderKey)) {
+            abort(422, 'A current order already exists for this user.');
+        }
+
         $validator = $request->validate([
             'products' => 'required|array',
-            'products.*.product_id' => 'required|numeric',
-            'products.*.product_option' => 'required|numeric',
+            'products.*.id' => 'required|exists:products,id',
+            'products.*.product_option_id' => 'required_without:products.*.custom_message|numeric|exists:product_options,id',
+            'products.*.custom_message' => 'required_without:products.*.product_option_id|string',
             'location.lat' => 'required|numeric',
             'location.lng' => 'required|numeric'
         ]);
-        $user = $request->user();
-        $username = $user->username;
-        
-        // each product in products array will contain product_id and product_option wil be the product option selected or a custom order message
 
+        
+        // each product in products array will contain product id and either product_option_id (the product option selected) or a custom_message
         // add order as pending status to be confirmed from admin
         $orderData = [
             'products' => $request->input('products'),
@@ -32,58 +39,44 @@ class OrderController {
             'user' => $user
         ];
 
-        $cacheOrderKey = $username . '_order'; 
-
         // tag as an order for user
         Cache::tags([$username, 'orders'])->put($cacheOrderKey, $orderData, now()->addDay());
         return $orderData;
     }
 
-    // create new product
-    public function edit(Request $request, Product $product)
+    // get user order
+    public function get(Request $request, Product $product)
     {
-        $hasImageField = $request->has('image');
+        $user = $request->user();
+        $username = $user->username;
+        $cacheOrderKey = $username . '_order';
+        $order = Cache::tags([$username, 'orders'])->get($cacheOrderKey);
 
-        $validationRules = [
-            'name' => 'required|string',
-            'category_id' => 'required|array',
-            'category_id.*' => 'numeric',
-            'product_option_id' => 'required|array',
-            'product_option_id.*' => 'numeric'
-        ];
-
-        if ($hasImageField && $request->input('image') !== 'null')
-        {
-            $validationRules['image'] = 'file|image'; 
+        $productIds = [];
+        foreach ($order['products'] as &$value) {
+            array_push($productIds, $value['id']);
         }
 
-        $request->validate($validationRules);
+        $products = Product::with(['options'])->find($productIds);
 
-        return DB::transaction(function () use ($request, $hasImageField, $product) {
-            $product->name = $request->input('name');
-            $product->categories()->sync($request->input('category_id'));
-            $product->options()->sync($request->input('product_option_id'));
-
-            $oldImagePath = $product->image;
-            if ($hasImageField) {
-                if ($request->hasFile('image')) {
-                    if ($request->file('image')->isValid()) {
-                        $path = $request->image->store('', 'public');
-                        $product->image = $path;
+        $keyed = $products->keyBy('id');
+        foreach ($order['products'] as $productInfo) {
+            if (isset($productInfo['product_option_id']))
+            {
+                foreach  ($keyed[$productInfo['id']]['options'] as $option) {
+                    if ($option['id'] == $productInfo['product_option_id']) {
+                        $keyed[$productInfo['id']]['option_selected'] = $option['name'];
+                        break;
                     }
-                } else {
-                    $product->image = null;
                 }
             }
-
-            $product->save();
-            
-            if ($hasImageField) {
-                // all changes succeeded delete old image
-                if ($oldImagePath) {
-                    Storage::disk('public')->delete($oldImagePath);
-                }
+            if (isset($productInfo['custom_message']))
+            {
+                $keyed[$productInfo['id']]['custom_message'] = $productInfo['custom_message'];
             }
-        });
+            unset($keyed[$productInfo['id']]['options']);
+        }
+        $order['products'] = $keyed;
+        return $order;
     }
 }

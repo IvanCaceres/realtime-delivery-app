@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom';
 
+import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -17,7 +18,7 @@ import FeaturedTiles from './../components/FeaturedTiles'
 import { getHomeContentAction } from "../store/features/system"
 import ProductCard from './../components/ProductCard'
 import GoogleMap from 'google-map-react'
-import { submitOrderAction } from "../store/features/cart";
+import { submitOrderAction, clearSubmitOrderOutcomeAction } from "../store/features/cart";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,10 +26,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-interface productOrderData {
-  product_id: string,
-  product_option: string,
-}
+type productOrderData = {
+  id: number,
+} & (
+    | { product_option_id: number; custom_message?: never }
+    | { product_option_id?: never; custom_message: string }
+  )
 
 interface userGeoLocation {
   lat: number,
@@ -40,7 +43,7 @@ interface orderPayload {
   location: userGeoLocation
 }
 
-const Cart: React.FC = ({ cart, submitOrder }: any) => {
+const Cart: React.FC = ({ cart, submitOrder, errors, success, clearSubmitOutcome }: any) => {
   const classes = useStyles()
   // component state
   // default location is middle of manhattan before user allows geolocation
@@ -61,24 +64,38 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
     lng: -73.984786
   }
 
+  const history = useHistory()
+
   // effects
   // get device geolocation on mount
   useEffect(() => {
-    // set default location
-    // setUserLocation({
-    //   lat: 40.754252,
-    //   lng: -73.984786
-    // })
+    getLocation()
   }, [])
 
+  // when component unmounts clear order submission outcomes
   useEffect(() => {
-    getLocation()
     return () => {
-      if (watcherId) {
-        navigator.geolocation.clearWatch(watcherId)
-      }
+      clearSubmitOutcome()
     }
   }, [])
+
+  // clear stale success/error messages when loading a new request
+  useEffect(() => {
+    if (loading) {
+      clearSubmitOutcome()
+    }
+  }, [loading])
+
+  // turn off loading when an order submission response is received
+  useEffect(() => {
+    if (success && success.id) {
+      // if order successfully placed navigate to order tracking page
+      history.push(`/order`)
+    }
+    return () => {
+      setLoading(false)
+    }
+  }, [success, errors])
 
   // setup order items with options / selected option
   useEffect(() => {
@@ -94,8 +111,8 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
       items.push({
         ...cartProduct,
         options: newOptions,
-        selectedOption: '',
-        customMessage: ''
+        selected_option: '',
+        custom_message: ''
       })
     })
     setOrderItems(items)
@@ -117,21 +134,30 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
     marginTop: '-50px'
   }
 
+  // google maps api key
   let mapApiKey = 'AIzaSyBQ3qO8KfzQWAQ2KXFMTe02qw9BvuKLsqY'
 
   const Marker = ({ title }: any) => (
     <div style={markerStyle}>
-      <img style={imgStyle} src="https://res.cloudinary.com/og-tech/image/upload/s--OpSJXuvZ--/v1545236805/map-marker_hfipes.png" alt={title} />
+      <img style={imgStyle} src="/marker.png" alt={title} />
       <h3>{title}</h3>
     </div>
   );
 
-  function productOptionSelectedUpdated(value: string, productId: string) {
+  function productOptionSelectedUpdated(value: number | string, productId: number, custom: boolean = false) {
     setOrderItems(orderItems.map((orderItem: any) => {
       if (orderItem.id === productId) {
+        let optionUpdate: any = {}
+        if (custom) {
+          optionUpdate.custom_message = value
+          optionUpdate.selected_option = ''
+        } else {
+          optionUpdate.selected_option = value
+          optionUpdate.custom_message = ''
+        }
         return {
           ...orderItem,
-          selectedOption: value
+          ...optionUpdate
         }
       }
       return orderItem
@@ -173,7 +199,7 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
     }
     // ensure every product has a selected option
     for (const orderItem of orderItems) {
-      if (!orderItem.selectedOption) {
+      if (!orderItem.selected_option && !orderItem.custom_message) {
         validationErrors.push('Must select an order option for every product in cart.')
         break;
       }
@@ -196,9 +222,18 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
     setLoading(true)
 
     let productsPayload: productOrderData[] = orderItems.map((orderItem: any) => {
+      console.log('show orderItem', orderItem)
+      let option_data: any = {}
+
+      if (orderItem.selected_option) {
+        option_data.product_option_id = orderItem.selected_option
+      } else {
+        option_data.custom_message = orderItem.custom_message
+      }
+
       return {
-        product_id: orderItem.id,
-        product_option: orderItem.selectedOption
+        id: orderItem.id,
+        ...option_data
       } as productOrderData
     })
 
@@ -267,11 +302,11 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
               )
             })
           }
-          {/* {
+          {
             errors ? errors.map((e: string, index: number) => (
               <Box mb={2} key={index}><Alert variant="outlined" severity="error" children={e} /></Box>
             )) : null
-          } */}
+          }
         </Box>
 
         <Box my={4}>
@@ -292,11 +327,14 @@ const Cart: React.FC = ({ cart, submitOrder }: any) => {
 function mapStateToProps(state: any) {
   return {
     cart: state.cart.cart,
+    errors: state.cart.submitError,
+    success: state.cart.submitSuccess
   }
 }
 
 const mapDispatch = {
-  submitOrder: submitOrderAction
+  submitOrder: submitOrderAction,
+  clearSubmitOutcome: clearSubmitOrderOutcomeAction
 }
 
 export default connect(

@@ -12,7 +12,8 @@ import {
     submitProductForm,
     submitProductOptionForm,
     submitReferralCodeForm,
-    submitOrder
+    submitOrder,
+    getOrder
 } from './../../providers/Api'
 import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
 import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
@@ -24,6 +25,8 @@ import {
     setHomeProductsAction
 } from './../features/system'
 import { submitOrderAction, setSubmitOrderOutcomeAction } from '../features/cart'
+
+import { getOrderAction, setOrderAction } from '../features/order'
 
 
 // get home content
@@ -283,6 +286,16 @@ function* submitReferralCodeFormSaga({ payload }) {
     }
 }
 
+// order
+function* getOrderSaga({ payload }) {
+    try {
+        const res = yield call(getOrder)
+        yield put(setOrderAction(res.data))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 function* submitOrderSaga({ payload }) {
     try {
         const res = yield call(submitOrder, payload)
@@ -341,6 +354,9 @@ export function* watchGetReferralCode() {
     yield takeEvery(getReferralCodeAction.toString(), getReferralCodeSaga)
 }
 
+export function* watchGetOrder() {
+    yield takeEvery(getOrderAction.toString(), getOrderSaga)
+}
 export function* watchSubmitOrder() {
     yield takeEvery(submitOrderAction.toString(), submitOrderSaga)
 }

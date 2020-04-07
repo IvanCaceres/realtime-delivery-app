@@ -8,6 +8,7 @@ import { reducer as featuredReducer } from './features/featured'
 import { reducer as productOptionReducer } from './features/productOption'
 import { reducer as referralCodeReducer } from './features/referralCode'
 import { reducer as cartReducer } from './features/cart'
+import { reducer as orderReducer } from './features/order'
 import { systemReducer } from './features/system'
 import watchLoginSaga, { checkToken, watchLogout, watchSubmitRegisterForm } from './sagas/login'
 import {
@@ -22,7 +23,8 @@ import {
     watchSubmitReferralCodeForm,
     watchGetReferralCode,
     watchGetHomeContent,
-    watchSubmitOrder
+    watchSubmitOrder,
+    watchGetOrder
 } from './sagas/api'
 
 const reducer = combineReducers({
@@ -33,7 +35,8 @@ const reducer = combineReducers({
     productOption: productOptionReducer,
     referralCode: referralCodeReducer,
     system: systemReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    order: orderReducer
 })
 
 export default function* rootSaga() {
@@ -46,6 +49,7 @@ export default function* rootSaga() {
     yield fork(watchGetProduct)
     yield fork(watchGetProductOption)
     yield fork(watchGetReferralCode)
+    yield fork(watchGetOrder)
     yield fork(watchSubmitCategoryForm)
     yield fork(watchSubmitFeaturedForm)
     yield fork(watchSubmitProductForm)

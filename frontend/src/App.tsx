@@ -17,6 +17,7 @@ import Category from "./pages/Category";
 import GenerateReferralCodesForm from './components/GenerateReferralCodesForm'
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
+import Order from './pages/Order'
 import LoginForm from "./components/LoginForm"
 import Product from "./pages/Product";
 import ProductOptionForm from "./components/ProductOptionForm";
@@ -84,7 +85,10 @@ const App: React.FC = ({ login, user }: any) => {
           < Route path="/register" children={<RegistrationForm />} />
           <Route path="/login" children={<LoginForm />} />
           {/* <Route path="/product/:productId" children={<Product />} /> */}
-          {/* <Route path="/:category" children={<Category />} /> */}
+          {/* <Route path="/:category" children={<Category />} /> */}.
+          <Route exact path="/trackOrder">
+            <Order />
+          </Route>
           <Route exact path="/cart">
             <Cart />
           </Route>
