@@ -10,10 +10,12 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import { getOrderAction, clearOrderUpdateOutcomeAction } from "../store/features/order";
+import { getOrderAction, clearOrderUpdateOutcomeAction, setOrderAction } from "../store/features/order";
 import green from '@material-ui/core/colors/green';
 import Grid from "@material-ui/core/Grid";
 import ProductCard from './../components/ProductCard'
+
+import useOrderUpdateApi from '../hooks/useOrderUpdateApi'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -27,11 +29,11 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const Order: React.FC = ({ order, getOrder, errors, success }: any) => {
+const Order: React.FC = ({ user, order, getOrder, setOrder, errors, success }: any) => {
     const classes = useStyles()
     // component state
     const [loading, setLoading] = React.useState<boolean>(false)
-
+    console.log('show user', user)
     // fetch order details
     React.useEffect(() => {
         setLoading(true)
@@ -45,6 +47,16 @@ const Order: React.FC = ({ order, getOrder, errors, success }: any) => {
             setLoading(false)
         }
     }, [order])
+
+    useOrderUpdateApi(user, (orderUpdate: any) => {
+        let orderUpdateObj = {
+            ...order,
+            order_status: orderUpdate.order.order_status,
+            delivery_time: orderUpdate.order.delivery_time
+        }
+
+        setOrder(orderUpdateObj)
+    })
 
     let productCards
     if (order && order.products) {
@@ -67,13 +79,13 @@ const Order: React.FC = ({ order, getOrder, errors, success }: any) => {
                     order &&
                     <Box my={4}>
                         <Typography variant="body1" color="inherit" noWrap>Order Status:&nbsp;
-                            <Typography variant="h6" component="span" className={clsx(classes.orderStatus, order.order_status == 'confirmed' && classes.orderConfirmed)}>{order.order_status}</Typography>
-                            <Box my={4}>
-                                <Grid container spacing={3}>
-                                    {productCards}
-                                </Grid>
-                            </Box>
+                            <Typography variant="h6" component="span" className={clsx(classes.orderStatus, ((order.order_status == 'confirmed' || order.order_status == 'completed') && classes.orderConfirmed))}>{order.order_status}</Typography>
                         </Typography>
+                        <Box my={4}>
+                            <Grid container spacing={3}>
+                                {productCards}
+                            </Grid>
+                        </Box>
                     </Box>
                 }
                 {/* loader */}
@@ -82,7 +94,7 @@ const Order: React.FC = ({ order, getOrder, errors, success }: any) => {
                 </Box>
                 {!loading && !order && <Typography variant="body2" color="inherit" noWrap>No order found.</Typography>}
             </Box>
-        </Container>
+        </Container >
     )
 }
 
@@ -90,11 +102,13 @@ function mapStateToProps(state: any) {
     return {
         order: state.order.order,
         success: state.order.success,
-        errors: state.order.error
+        errors: state.order.error,
+        user: state.user.user
     }
 }
 
 const mapDispatch = {
+    setOrder: setOrderAction,
     getOrder: getOrderAction,
     clearSubmitOutcome: clearOrderUpdateOutcomeAction
 }

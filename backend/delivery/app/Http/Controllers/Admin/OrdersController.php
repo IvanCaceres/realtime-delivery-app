@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use App\Events\OrderUpdate;
 
 class OrdersController {
     // list all user orders
@@ -85,6 +86,9 @@ class OrdersController {
         $order['order_status'] = $request->input('order_status');
 
         Cache::tags(['orders'])->put($id, $order, now()->addDay());
+
+        event(new OrderUpdate($order));
+
         return $order;
     }
 }

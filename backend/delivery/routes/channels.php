@@ -14,3 +14,8 @@
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+// authorize user order channel
+Broadcast::channel('order.{orderId}', function ($user, $orderId) {
+    return ($user->username.'_order') === $orderId;
+});
