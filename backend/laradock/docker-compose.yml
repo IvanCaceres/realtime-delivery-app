@@ -472,7 +472,7 @@ services:
         # windows development machine workaround
         - pgRDAdata:/var/lib/postgresql/data
         - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-      # when deploying production site make comment this to make DB port no longer accessible
+      # when deploying production site comment this port binding out to make DB port no longer accessible
       ports:
         - "${POSTGRES_PORT}:5432"
       environment:
