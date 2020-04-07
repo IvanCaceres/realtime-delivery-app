@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "http://delivrbl.com/static/css/main.5f361e03.chunk.css",
+    "main.js": "http://delivrbl.com/static/js/main.0afe0377.chunk.js",
+    "main.js.map": "http://delivrbl.com/static/js/main.0afe0377.chunk.js.map",
+    "runtime-main.js": "http://delivrbl.com/static/js/runtime-main.4868cb54.js",
+    "runtime-main.js.map": "http://delivrbl.com/static/js/runtime-main.4868cb54.js.map",
+    "static/css/2.2ce93ba3.chunk.css": "http://delivrbl.com/static/css/2.2ce93ba3.chunk.css",
+    "static/js/2.739355b1.chunk.js": "http://delivrbl.com/static/js/2.739355b1.chunk.js",
+    "static/js/2.739355b1.chunk.js.map": "http://delivrbl.com/static/js/2.739355b1.chunk.js.map",
+    "precache-manifest.ccbdfc21b28807ee07b98022a5c56a30.js": "http://delivrbl.com/precache-manifest.ccbdfc21b28807ee07b98022a5c56a30.js",
+    "service-worker.js": "http://delivrbl.com/service-worker.js",
+    "static/css/2.2ce93ba3.chunk.css.map": "http://delivrbl.com/static/css/2.2ce93ba3.chunk.css.map",
+    "static/css/main.5f361e03.chunk.css.map": "http://delivrbl.com/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.739355b1.chunk.js.LICENSE.txt": "http://delivrbl.com/static/js/2.739355b1.chunk.js.LICENSE.txt",
+    "static/media/UploadIcon.svg": "http://delivrbl.com/static/media/UploadIcon.1cedb6e9.svg",
+    "welcome.blade.php": "http://delivrbl.com/welcome.blade.php"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4868cb54.js",
+    "static/css/2.2ce93ba3.chunk.css",
+    "static/js/2.739355b1.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.0afe0377.chunk.js"
+  ]
+}
