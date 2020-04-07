@@ -18,6 +18,7 @@ import GenerateReferralCodesForm from './components/GenerateReferralCodesForm'
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Order from './pages/Order'
+import EditOrder from './components/EditOrderForm'
 import LoginForm from "./components/LoginForm"
 import Product from "./pages/Product";
 import ProductOptionForm from "./components/ProductOptionForm";
@@ -28,9 +29,14 @@ import ViewProductOptions from "./components/ViewProductOptions";
 import ViewFeaturedItems from "./components/ViewFeaturedItems";
 import ViewReferralCodes from './components/ViewReferralCodes'
 
+import useEcho from './hooks/useEcho'
+import { EchoContext } from './context/echo'
+
 import { login } from './store/features/user/userFeatures'
+import ViewOrders from "./components/ViewOrders";
 
 const App: React.FC = ({ login, user }: any) => {
+  const echo = useEcho()
   // attempt user login
   useEffect(() => {
     login()
@@ -67,6 +73,9 @@ const App: React.FC = ({ login, user }: any) => {
           <Route exact path={["/admin/productOption/edit/:id", "/admin/productOption"]}>
             <ProductOptionForm />
           </Route>
+          <Route exact path="/admin/order/edit/:id">
+            <EditOrder />
+          </Route>
           <Route exact path="/admin/referral/view">
             <ViewReferralCodes />
           </Route>
@@ -78,26 +87,28 @@ const App: React.FC = ({ login, user }: any) => {
     )
   }
   return (
-    <Router>
-      <Switch>
-        {adminRoutes}
-        <AppLayout>
-          < Route path="/register" children={<RegistrationForm />} />
-          <Route path="/login" children={<LoginForm />} />
-          {/* <Route path="/product/:productId" children={<Product />} /> */}
-          {/* <Route path="/:category" children={<Category />} /> */}.
+    <EchoContext.Provider value={echo}>
+      <Router>
+        <Switch>
+          {adminRoutes}
+          <AppLayout>
+            < Route path="/register" children={<RegistrationForm />} />
+            <Route path="/login" children={<LoginForm />} />
+            {/* <Route path="/product/:productId" children={<Product />} /> */}
+            {/* <Route path="/:category" children={<Category />} /> */}.
           <Route exact path="/trackOrder">
-            <Order />
-          </Route>
-          <Route exact path="/cart">
-            <Cart />
-          </Route>
-          <Route exact path="/">
-            <Home />
-          </Route>
-        </AppLayout>
-      </Switch>
-    </Router >
+              <Order />
+            </Route>
+            <Route exact path="/cart">
+              <Cart />
+            </Route>
+            <Route exact path="/">
+              <Home />
+            </Route>
+          </AppLayout>
+        </Switch>
+      </Router >
+    </EchoContext.Provider>
   );
 };
 

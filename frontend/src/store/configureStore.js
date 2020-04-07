@@ -24,7 +24,9 @@ import {
     watchGetReferralCode,
     watchGetHomeContent,
     watchSubmitOrder,
-    watchGetOrder
+    watchGetOrder,
+    watchGetOrdersAdmin,
+    watchSubmitAdminOrderEdit
 } from './sagas/api'
 
 const reducer = combineReducers({
@@ -50,6 +52,8 @@ export default function* rootSaga() {
     yield fork(watchGetProductOption)
     yield fork(watchGetReferralCode)
     yield fork(watchGetOrder)
+    yield fork(watchGetOrdersAdmin)
+    yield fork(watchSubmitAdminOrderEdit)
     yield fork(watchSubmitCategoryForm)
     yield fork(watchSubmitFeaturedForm)
     yield fork(watchSubmitProductForm)

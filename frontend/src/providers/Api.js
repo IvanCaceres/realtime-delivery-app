@@ -225,12 +225,39 @@ export const submitReferralCodeForm = (quantity) => {
 }
 
 // order
+export const getAdminOrders = (id) => {
+    let url = '/admin/orders'
+
+    if (id) {
+        url += `/${id}`
+    }
+
+    return axios({
+        method: 'get',
+        url
+    });
+}
+
+
 export const getOrder = () => {
     let url = '/order'
     return axios({
         method: 'get',
         url
     });
+}
+
+export const submitAdminOrderEdit = (form) => {
+    let method = 'put'
+    let url = '/admin/orders'
+
+    url += `/${form.id}`
+
+    return axios({
+        method,
+        url,
+        data: form
+    })
 }
 
 export const submitOrder = (form) => {

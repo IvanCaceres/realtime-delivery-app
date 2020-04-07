@@ -57,7 +57,7 @@ function ProductCard({
     removeFromCart,
     options,
     onOptionSelected,
-    cartButton = false,
+    cartButton = true,
     infoString = '',
 }: {
     title: string;

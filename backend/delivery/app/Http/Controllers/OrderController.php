@@ -12,12 +12,12 @@ class OrderController {
 
     // create new user order
     public function create(Request $request)
-    {
+    {   
         $user = $request->user();
         $username = $user->username;
         $cacheOrderKey = $username . '_order'; 
 
-        if (Cache::tags([$username, 'orders'])->get($cacheOrderKey)) {
+        if (Cache::tags(['orders'])->get($cacheOrderKey)) {
             abort(422, 'A current order already exists for this user.');
         }
 
@@ -34,13 +34,25 @@ class OrderController {
         // each product in products array will contain product id and either product_option_id (the product option selected) or a custom_message
         // add order as pending status to be confirmed from admin
         $orderData = [
+            'id' => $cacheOrderKey,
             'products' => $request->input('products'),
             'order_status' => 'pending',
-            'user' => $user
+            'user' => $user,
+            'placed' => now(),
+            'location' => $request->input('location')
         ];
 
         // tag as an order for user
-        Cache::tags([$username, 'orders'])->put($cacheOrderKey, $orderData, now()->addDay());
+        Cache::tags(['orders'])->put($cacheOrderKey, $orderData, now()->addDay());
+
+        // get existing orders index
+        $ordersIndex = Cache::tags(['orders'])->get('index');
+        if (!$ordersIndex) {
+            $ordersIndex = []; 
+        }
+        $ordersIndex[] = $cacheOrderKey;
+        // add to orders index cache
+        Cache::tags(['orders'])->put('index', $ordersIndex, now()->addDay());
         return $orderData;
     }
 
@@ -50,7 +62,11 @@ class OrderController {
         $user = $request->user();
         $username = $user->username;
         $cacheOrderKey = $username . '_order';
-        $order = Cache::tags([$username, 'orders'])->get($cacheOrderKey);
+        $order = Cache::tags(['orders'])->get($cacheOrderKey);
+
+        if (!$order) {
+            return $order;
+        }
 
         $productIds = [];
         foreach ($order['products'] as &$value) {

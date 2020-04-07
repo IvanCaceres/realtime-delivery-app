@@ -67,7 +67,7 @@ export default function Orders({
 
     tableElements.rows = data.map((row, index) => {
         let target = index === 0 ? tableElements.headers : tableElements.rows
-        return (<TableRow key={row.id}>
+        return (<TableRow key={row.id || row.user.id}>
             {columns.map((columnConfig) => {
                 let colData = row[columnConfig.key]
 

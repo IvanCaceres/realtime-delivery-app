@@ -80,6 +80,7 @@ const Order: React.FC = ({ order, getOrder, errors, success }: any) => {
                 <Box my={4}>
                     {loading && <CircularProgress />}
                 </Box>
+                {!loading && !order && <Typography variant="body2" color="inherit" noWrap>No order found.</Typography>}
             </Box>
         </Container>
     )

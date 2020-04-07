@@ -13,7 +13,9 @@ import {
     submitProductOptionForm,
     submitReferralCodeForm,
     submitOrder,
-    getOrder
+    getOrder,
+    getAdminOrders,
+    submitAdminOrderEdit
 } from './../../providers/Api'
 import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
 import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction } from './../features/featured'
@@ -26,7 +28,7 @@ import {
 } from './../features/system'
 import { submitOrderAction, setSubmitOrderOutcomeAction } from '../features/cart'
 
-import { getOrderAction, setOrderAction } from '../features/order'
+import { getOrderAction, setOrderAction, setOrdersAction, getAdminOrdersAction, setAdminOrderAction, setSubmitAdminOrderEditOutcomeAction, submitAdminOrderEditFormAction } from '../features/order'
 
 
 // get home content
@@ -287,12 +289,62 @@ function* submitReferralCodeFormSaga({ payload }) {
 }
 
 // order
+function* getOrdersAdminSaga({ payload }) {
+    if (!payload) {
+        let payload = {}
+    }
+    try {
+        const { id } = payload
+        const res = yield call(getAdminOrders, id)
+        if (id) {
+            yield put(setAdminOrderAction(res.data))
+        } else {
+            yield put(setOrdersAction(res.data))
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 function* getOrderSaga({ payload }) {
     try {
         const res = yield call(getOrder)
         yield put(setOrderAction(res.data))
     } catch (error) {
         console.error(error)
+    }
+}
+
+function* submitAdminOrderEditSaga({ payload }) {
+    try {
+        const res = yield call(submitAdminOrderEdit, payload)
+        let success = true
+        // if (res.data) {
+        // success = res.data
+        // yield put(setProductAction(res.data))
+        // }
+        yield put(setSubmitAdminOrderEditOutcomeAction({ success }))
+    } catch (error) {
+        console.error(error)
+        // grab all error messages
+        let errors = []
+        if (error.response.data) {
+            if (error.response.data.message) {
+                errors.push(error.response.data.message)
+            }
+            if (error.response.data.errors) {
+                // loop through errors object
+                // loop through error messages for each field
+                for (const fieldErrors of Object.values(error.response.data.errors)) {
+                    errors.push(...fieldErrors)
+                }
+            }
+        }
+
+        if (errors.length === 0) {
+            errors.push('Error submitting product form.')
+        }
+        yield put(setSubmitAdminOrderEditOutcomeAction({ errors }))
     }
 }
 
@@ -357,6 +409,16 @@ export function* watchGetReferralCode() {
 export function* watchGetOrder() {
     yield takeEvery(getOrderAction.toString(), getOrderSaga)
 }
+
+export function* watchGetOrdersAdmin() {
+    yield takeEvery(getAdminOrdersAction.toString(), getOrdersAdminSaga)
+}
+
+export function* watchSubmitAdminOrderEdit() {
+    yield takeEvery(submitAdminOrderEditFormAction.toString(), submitAdminOrderEditSaga)
+}
+
+
 export function* watchSubmitOrder() {
     yield takeEvery(submitOrderAction.toString(), submitOrderSaga)
 }
