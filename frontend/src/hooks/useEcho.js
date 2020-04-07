@@ -19,8 +19,8 @@ const useEcho = () => {
     useEffect(() => {
         let echoInstance = new Echo({
             broadcaster: 'pusher',
-            key: 'b6387fca6a8c16689601',
-            cluster: 'us2',
+            key: `${process.env.REACT_APP_PUSHER_API_KEY}`,
+            cluster: `${process.env.REACT_APP_PUSHER_CLUSTER}`,
             forceTLS: true,
             auth: {
                 headers: {

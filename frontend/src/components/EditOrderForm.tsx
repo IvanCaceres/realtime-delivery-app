@@ -85,7 +85,7 @@ function EditOrderForm({ order, success, errors, getOrder, submitForm, clearSubm
     }
 
     // google maps api key
-    let mapApiKey = 'AIzaSyBQ3qO8KfzQWAQ2KXFMTe02qw9BvuKLsqY'
+    let mapApiKey = `${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
 
     const Marker = ({ title }: any) => (
         <div style={markerStyle}>
