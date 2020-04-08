@@ -10,8 +10,11 @@ Running the backend will require creating an env file based on the respective en
 
 laradock env: backend/laradock/env-example -> .env
 
+php-worker configuration file: backend/laradock/php-worker/laravel-worker.conf.example -> backend/laradock/php-worker/laravel-worker.conf
 
 laravel env: backend/delivery/.env-example -> .env (make sure to add pusher api keys)
+
+
 
 
 with the .env files in place you may proceed
