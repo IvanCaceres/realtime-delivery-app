@@ -473,8 +473,8 @@ services:
         - pgRDAdata:/var/lib/postgresql/data
         - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
       # when deploying production site comment this port binding out to make DB port no longer accessible
-      ports:
-        - "${POSTGRES_PORT}:5432"
+      # ports:
+        # - "${POSTGRES_PORT}:5432"
       environment:
         - POSTGRES_DB=${POSTGRES_DB}
         - POSTGRES_USER=${POSTGRES_USER}
