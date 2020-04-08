@@ -7,8 +7,12 @@ To run the development server you'll need to get the backend Laravel application
 
 Running the backend will require creating an env file based on the respective env-example files located in:
 
+
 laradock env: backend/laradock/env-example -> .env
+
+
 laravel env: backend/delivery/.env-example -> .env (make sure to add pusher api keys)
+
 
 with the .env files in place you may proceed
 
