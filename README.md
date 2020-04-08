@@ -1,44 +1,50 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with a slightly customized version of [Create React App](https://github.com/facebook/create-react-app).
+It maintains all of the same functionality but includes changes that allow it to integrate with a backend server like Laravel during development. https://github.com/IvanCaceres/create-react-app This package is hosted on npm as laravel-react-scripts
 
-## Available Scripts
+## Getting started
 
-In the project directory, you can run:
+To run the development server you'll need to get the backend Laravel application and the frontend react application running.
 
-### `yarn start`
+Running the backend will require creating an env file based on the respective env-example files located in:
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+laradock env: backend/laradock/env-example -> .env
+laravel env: backend/delivery/.env-example -> .env (make sure to add pusher api keys)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+with the .env files in place you may proceed
 
-### `yarn test`
+To start the backend you'll need docker/docker-compose
+You must start the backend docker containers from within the backend/laradock directory by running the following command from inside that directory:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`docker-compose up -d nginx postgres redis php-worker`
 
-### `yarn build`
+With the docker containers up you'll want to run composer install and php artisan migrate (to perform the database migrations)
+To run these commands against the php Laravel application you'll need to enter the workspace docker container and run them:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+From the backend/laradock directory enter the workspace container by running the following:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+`docker-compose exec workspace bash`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+You may then run the composer install and php artisan migrate commands
 
-### `yarn eject`
+`composer install`
+`php artisan migrate`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The backend app should now be reachable from http://localhost by default, you may configure the port the backend app runs on via the laradock/.env file, specifically the `NGINX_HOST_HTTP_PORT=80` `NGINX_HOST_HTTPS_PORT=443` entries.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+You may now run the frontend application / dev webpack build process with the customized laravel-react-scripts create-react-app by doing the following:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+You must set up the frontend env file by copying it from frontend/env.development-example -> frontend/.env.development
 
-## Learn More
+You also need to provide pusher / google maps api key in this .env file as well as confirm the backend_url settings (read comments in example)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+From within the /frontend directory run:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`npm install`
+
+`npm start`
+
+The application will then open up in your default browser pointing to BACKEND_URL
+
+
+
