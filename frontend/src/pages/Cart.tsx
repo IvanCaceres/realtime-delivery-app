@@ -19,6 +19,7 @@ import { getHomeContentAction } from "../store/features/system"
 import ProductCard from './../components/ProductCard'
 import GoogleMap from 'google-map-react'
 import { submitOrderAction, clearSubmitOrderOutcomeAction } from "../store/features/cart";
+import { getOrderAction } from "../store/features/order";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,7 +44,7 @@ interface orderPayload {
   location: userGeoLocation
 }
 
-const Cart: React.FC = ({ cart, submitOrder, errors, success, clearSubmitOutcome }: any) => {
+const Cart: React.FC = ({ cart, order, getOrder, submitOrder, errors, success, clearSubmitOutcome }: any) => {
   const classes = useStyles()
   // component state
   // default location is middle of manhattan before user allows geolocation
@@ -67,9 +68,27 @@ const Cart: React.FC = ({ cart, submitOrder, errors, success, clearSubmitOutcome
   const history = useHistory()
 
   // effects
+  // fetch order details
+  React.useEffect(() => {
+    setLoading(true)
+    getOrder()
+  }, [])
+
+  // redirect to order tracking if user has order
+  useEffect(() => {
+    if (order) {
+      history.push('/trackOrder')
+    }
+  }, [order])
+
   // get device geolocation on mount
   useEffect(() => {
-    getLocation()
+    let didCancel = false
+    getLocation(didCancel)
+    return () => {
+      // if component unmounts cancel geoLocation callback setState update
+      didCancel = true
+    }
   }, [])
 
   // when component unmounts clear order submission outcomes
@@ -88,9 +107,9 @@ const Cart: React.FC = ({ cart, submitOrder, errors, success, clearSubmitOutcome
 
   // turn off loading when an order submission response is received
   useEffect(() => {
-    if (success && success.id) {
+    if (success) {
       // if order successfully placed navigate to order tracking page
-      history.push(`/order`)
+      history.push(`/trackOrder`)
     }
     return () => {
       setLoading(false)
@@ -178,9 +197,12 @@ const Cart: React.FC = ({ cart, submitOrder, errors, success, clearSubmitOutcome
     })
   }
 
-  const getLocation = () => {
+  const getLocation = (didCancel: boolean) => () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((pos: any) => {
+        if (didCancel) {
+          return
+        }
         let crd = pos.coords
         setUserLocation({
           lat: crd.latitude,
@@ -326,6 +348,7 @@ const Cart: React.FC = ({ cart, submitOrder, errors, success, clearSubmitOutcome
 
 function mapStateToProps(state: any) {
   return {
+    order: state.order.order,
     cart: state.cart.cart,
     errors: state.cart.submitError,
     success: state.cart.submitSuccess
@@ -334,7 +357,8 @@ function mapStateToProps(state: any) {
 
 const mapDispatch = {
   submitOrder: submitOrderAction,
-  clearSubmitOutcome: clearSubmitOrderOutcomeAction
+  clearSubmitOutcome: clearSubmitOrderOutcomeAction,
+  getOrder: getOrderAction
 }
 
 export default connect(
