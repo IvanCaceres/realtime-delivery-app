@@ -56,12 +56,21 @@ The application will then open up in your default browser pointing to BACKEND_UR
 
 
 ## Production Build / Deployment Process
+# Backend
+The backend services used by docker/docker-compose are (nginx, postgres, redis, php-worker)
 
-The backend services used by docker/docker-compose are nginx, postgres, redis, php-worker
+
+eg: `docker-compose up -d nginx postgres redis php-worker`
+
+
+
 During development these services normally expose and bind ports from each of their respective containers, making these ports available for local use, ex: Postgres container binds port the local port to container port `5432:5432`, redis binds port `6379:6379` etc the services bind their typical ports and expose them publically which is undesired behavior on a live production server that can be accessed publically.
 
 
+
 To resolve this security issue, remove/comment out the port bindings from the docker-compose.yml file from the services that run publically on the server (nginx, postgres, redis, php-worker), also making sure to comment out the port binding for the workspace server as well once you're done setting up the app / running Laravel/php commands.
+
+
 
 
 
