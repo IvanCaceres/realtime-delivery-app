@@ -33,9 +33,17 @@ From the backend/laradock directory enter the workspace container by running the
 
 You may then run the composer install and php artisan migrate commands
 
+
 `composer install`
+
+
 `php artisan migrate`
+
+
 `php artisan storage:link` (created symlink for stroage uploads to be visible from public folder)
+
+
+
 
 The backend app should now be reachable from http://localhost by default, you may configure the port the backend app runs on via the laradock/.env file, specifically the `NGINX_HOST_HTTP_PORT=80` `NGINX_HOST_HTTPS_PORT=443` entries.
 
