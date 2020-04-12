@@ -97,11 +97,11 @@ const App: React.FC = ({ login, user }: any) => {
             <Route path="/login" children={<LoginForm />} />
             {/* <Route path="/product/:productId" children={<Product />} /> */}
             {/* <Route path="/:category" children={<Category />} /> */}.
-            <Route exact path="/trackOrder">
-              <Switch>
-                {user ? <Order /> : <Redirect to="/login" />}
-              </Switch>
-            </Route>
+            {user &&
+              <Route exact path="/trackOrder">
+                <Order />
+              </Route>
+            }
             <Route exact path="/cart">
               <Switch>
                 {user ? <Cart /> : <Redirect to="/login" />}

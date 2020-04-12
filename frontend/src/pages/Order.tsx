@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider'
 import { getOrderAction, clearOrderUpdateOutcomeAction, setOrderAction } from "../store/features/order";
 import green from '@material-ui/core/colors/green';
 import Grid from "@material-ui/core/Grid";
+import moment from 'moment'
 import ProductCard from './../components/ProductCard'
 
 import useOrderUpdateApi from '../hooks/useOrderUpdateApi'
@@ -33,7 +34,6 @@ const Order: React.FC = ({ user, order, getOrder, setOrder, errors, success }: a
     const classes = useStyles()
     // component state
     const [loading, setLoading] = React.useState<boolean>(false)
-    console.log('show user', user)
     // fetch order details
     React.useEffect(() => {
         setLoading(true)
@@ -81,6 +81,13 @@ const Order: React.FC = ({ user, order, getOrder, setOrder, errors, success }: a
                         <Typography variant="body1" color="inherit" noWrap>Order Status:&nbsp;
                             <Typography variant="h6" component="span" className={clsx(classes.orderStatus, ((order.order_status == 'confirmed' || order.order_status == 'completed') && classes.orderConfirmed))}>{order.order_status}</Typography>
                         </Typography>
+                        {
+                            order.delivery_time ?
+                                <Typography variant="body1" color="inherit" noWrap>Delivery Time:&nbsp;
+                                    <Typography variant="h6" component="span" className={clsx(classes.orderStatus, classes.orderConfirmed)}>{moment(order.delivery_time).format('MMMM Do hh:MM a')}</Typography>
+                                </Typography>
+                                : null
+                        }
                         <Box my={4}>
                             <Grid container spacing={3}>
                                 {productCards}
