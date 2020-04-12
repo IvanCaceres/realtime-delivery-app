@@ -42,7 +42,7 @@ You may then run the composer install and php artisan migrate commands
 
 `php artisan storage:link` (created symlink for stroage uploads to be visible from public folder)
 
-
+`php artisan create:admin` (custom command to create the admin user, can only be used to create the admin user once)
 
 
 The backend app should now be reachable from http://localhost by default, you may configure the port the backend app runs on via the laradock/.env file, specifically the `NGINX_HOST_HTTP_PORT=80` `NGINX_HOST_HTTPS_PORT=443` entries.
