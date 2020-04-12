@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from 'react-redux'
 
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 // layouts
 import AdminLayout from './Layouts/AdminLayout'
@@ -86,6 +86,7 @@ const App: React.FC = ({ login, user }: any) => {
       </Route>
     )
   }
+
   return (
     <EchoContext.Provider value={echo}>
       <Router>
@@ -96,11 +97,15 @@ const App: React.FC = ({ login, user }: any) => {
             <Route path="/login" children={<LoginForm />} />
             {/* <Route path="/product/:productId" children={<Product />} /> */}
             {/* <Route path="/:category" children={<Category />} /> */}.
-          <Route exact path="/trackOrder">
-              <Order />
+            <Route exact path="/trackOrder">
+              <Switch>
+                {user ? <Order /> : <Redirect to="/login" />}
+              </Switch>
             </Route>
             <Route exact path="/cart">
-              <Cart />
+              <Switch>
+                {user ? <Cart /> : <Redirect to="/login" />}
+              </Switch>
             </Route>
             <Route exact path="/">
               <Home />
