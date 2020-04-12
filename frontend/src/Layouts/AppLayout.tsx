@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { useHistory } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Badge from '@material-ui/core/Badge';
@@ -12,6 +13,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { logoutThunk } from './../store/features/user/userFeatures'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,8 +33,16 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-function ButtonAppBar({ children, cart, user }: any) {
+function ButtonAppBar({ logout, children, cart, user }: any) {
     const classes = useStyles();
+    const history = useHistory()
+
+    function handleLogout() {
+        logout().then(() => {
+            console.log('logout thunk then')
+            history.push('/')
+        })
+    }
 
     return (
         <div className={classes.root}>
@@ -50,7 +60,9 @@ function ButtonAppBar({ children, cart, user }: any) {
                     }
                     {!user ? <Button color="inherit" component={Link} to="/login">Login</Button> : null}
                     {(user && user.admin || !user) ? <Button color="inherit" component={Link} to="/register">Register</Button> : null}
-                    {user ? <Button color="inherit" component={Link} to="/login">Logout</Button> : null}
+                    {user ? <Button color="inherit" onClick={() => {
+                        handleLogout()
+                    }}>Logout</Button> : null}
                     {user ? <Button color="inherit" component={Link} to="/trackOrder">Track Order</Button> : null}
                     <IconButton edge="end" className={classes.cart} color="inherit" aria-label="cart" component={Link} to="/cart">
                         <Badge badgeContent={cart.length} color="secondary">
@@ -76,6 +88,11 @@ function mapStateToProps(state: any) {
     }
 }
 
+const mapDispatch = {
+    logout: logoutThunk,
+}
+
 export default connect(
     mapStateToProps,
+    mapDispatch,
 )(ButtonAppBar)

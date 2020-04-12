@@ -1,4 +1,17 @@
-import { createSlice, createAction } from '@reduxjs/toolkit'
+import { createSlice, createAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { logout as logoutApi } from './../../../providers/Api'
+
+export const logoutThunk = createAsyncThunk('user/logoutThunk', async () => {
+    try {
+        // call logout api request
+        const response = await logoutApi()
+        return
+    } catch (err) {
+        if (err) {
+            throw err
+        }
+    }
+})
 
 const userSlice = createSlice({
     name: 'user',
@@ -9,6 +22,11 @@ const userSlice = createSlice({
         setUser(state, action) {
             state.user = action.payload
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(logoutThunk.fulfilled, (state) => {
+            state.user = null
+        })
     }
 })
 
