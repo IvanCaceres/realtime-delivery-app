@@ -23,7 +23,7 @@
     "google-map-react": "^1.1.7",
     "husky": "^4.0.10",
     "laravel-echo": "^1.7.0",
-    "laravel-react-scripts": "3.4.14",
+    "laravel-react-scripts": "3.5.0",
     "lint-staged": "^9.5.0",
     "material-ui-phone-number": "^2.2.6",
     "moment": "^2.24.0",
