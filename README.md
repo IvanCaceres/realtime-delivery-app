@@ -84,13 +84,18 @@ To finalize the frontend app you may build for production/produce production fil
 
 From within the `/frontend` folder `npm run build`
 
+This automatically outputs the `/build` assets directory into the right backend public directory:
+`/backend/delivery/public`
 
-This will produce a `/frontend/build/` directory filled with the production ready scripts / assets
-You must move the CONTENTS of `/frontend/build` into the backend public directory `/backend/delivery/public`
+you may customize this path using the env variable `BACKEND_PUBLIC_PATH` check env examples
 
-This makes the production assets available for user download/html linking. All files placed in the `/backend/delivery/public` can be loaded from root `http://localhost/fileExample.js` or whatever your domain is.
+Make sure you production env has been setup by using the production example and filling in your api credentials as well as PUBLIC_URL.
 
+You should place your own domain as the PUBLIC_URL as such `https://yourdomain.com/build`
 
+See the env.production-example which should be copied as => `.env.production` for it to take effect.
+
+All files/directories placed in `/backend/delivery/public` can be loaded from root `http://localhost/fileExample.js` or whatever your domain is.
 
 You will need to set up an SSL certificate so browsers allow requesting geo location / device location permissions.
 
