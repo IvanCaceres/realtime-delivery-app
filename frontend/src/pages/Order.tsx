@@ -38,6 +38,10 @@ const Order: React.FC = ({ user, order, getOrder, setOrder, errors, success }: a
     React.useEffect(() => {
         setLoading(true)
         getOrder()
+        return () => {
+            // clear order on unmount
+            setOrder(null)
+        }
         // getCategory({ queryParams })
     }, [])
 
