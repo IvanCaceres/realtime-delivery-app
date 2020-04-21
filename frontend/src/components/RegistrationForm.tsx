@@ -19,7 +19,6 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 import MuiPhoneNumber from 'material-ui-phone-number'
 
-import ImageUploader from '@ivancaceres/react-images-upload'
 import { submitRegisterFormAction, clearRegisterSubmitOutcomeAction } from "../store/features/system";
 
 const useStyles = makeStyles(theme => ({

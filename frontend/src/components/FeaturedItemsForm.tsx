@@ -18,7 +18,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 
-import ImageUploader from '@ivancaceres/react-images-upload'
+import ImageUploader from 'react-images-upload/src/component'
 
 import { clearSubmitFeaturedOutcomeAction, getFeaturedAction, setFeaturedAction, submitFeaturedAction } from './../store/features/featured'
 import { getProductAction } from './../store/features/product'
@@ -85,7 +85,6 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
     // form submission loading
     const [loading, setLoading] = React.useState<boolean>(false)
     const [productSelected, setProductSelected] = React.useState<string>('')
-    const [remountKey, setRemountKey] = React.useState<string>('normal')
 
     // effects
     // set initial select label width
@@ -121,6 +120,7 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
             }
         }
         if (!id) {
+            (imageUploaderRef.current as any).clearPictures()
             setFeaturedId(undefined)
             // clear store product data
             setFeatured(null)
@@ -154,8 +154,6 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
             setFeaturedTitle('')
             setFeaturedImage(null)
             setDefaultImage(undefined)
-            // must force remount image uploader component to ensure fresh preview
-            setRemountKey(`clearImage${Date.now()}`)
             setCategorySelected('')
             setProductSelected('')
             setFeaturedImageChanged(false)
@@ -183,6 +181,7 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
     }, [success, errors])
 
     const inputLabel = React.useRef<HTMLLabelElement>(null);
+    const imageUploaderRef = React.useRef<ImageUploader>(null);
 
     function featuredImageChange(files: File[]) {
         setFeaturedImageChanged(true)
@@ -277,7 +276,7 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
                 {/* Product Image */}
                 <FormControl margin="normal" fullWidth>
                     <ImageUploader
-                        key={remountKey}
+                        ref={imageUploaderRef}
                         className={classes.imgUploader}
                         withIcon={true}
                         singleImage

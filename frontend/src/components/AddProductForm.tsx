@@ -17,7 +17,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 
-import ImageUploader from '@ivancaceres/react-images-upload'
+import ImageUploader from 'react-images-upload/src/component'
 
 import { submitProductAction, getProductAction, setProductAction, clearSubmitProductOutcomeAction } from "../store/features/product";
 import { getProductOptionAction } from './../store/features/productOption'
@@ -121,6 +121,8 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
             }
         }
         if (!id) {
+            (imageUploaderRef.current as any).clearPictures()
+            setProductId(undefined)
             // clear store product data
             setProduct(null)
             clearSubmitOutcome()
@@ -160,8 +162,6 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
             setProductName('')
             setProductImage(null)
             setDefaultImage(undefined)
-            // must force remount image uploader component to ensure fresh preview
-            setRemountKey(`clearImage${Date.now()}`)
             setSelectedProductOptions([])
             setProductCategories([])
             setProductImageChanged(false)
@@ -189,6 +189,7 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
     }, [success, errors])
 
     const inputLabel = React.useRef<HTMLLabelElement>(null);
+    const imageUploaderRef = React.useRef<ImageUploader>(null);
 
     function productImageChange(files: File[]) {
         setProductImageChanged(true)
@@ -272,7 +273,7 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
                 {/* Product Image */}
                 <FormControl margin="normal" fullWidth>
                     <ImageUploader
-                        key={remountKey}
+                        ref={imageUploaderRef}
                         className={classes.imgUploader}
                         withIcon={true}
                         singleImage
