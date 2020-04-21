@@ -19,7 +19,7 @@ import { getHomeContentAction } from "../store/features/system"
 import ProductCard from './../components/ProductCard'
 import GoogleMap from 'google-map-react'
 import { submitOrderAction, clearSubmitOrderOutcomeAction } from "../store/features/cart";
-import { getOrderAction } from "../store/features/order";
+import { clearOrderAction, getOrderAction } from "../store/features/order";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +44,7 @@ interface orderPayload {
   location: userGeoLocation
 }
 
-const Cart: React.FC = ({ cart, order, getOrder, submitOrder, errors, success, clearSubmitOutcome }: any) => {
+const Cart: React.FC = ({ cart, order, clearOrder, getOrder, submitOrder, errors, success, clearSubmitOutcome }: any) => {
   const classes = useStyles()
   // component state
   // default location is middle of manhattan before user allows geolocation
@@ -70,8 +70,20 @@ const Cart: React.FC = ({ cart, order, getOrder, submitOrder, errors, success, c
   // effects
   // fetch order details
   React.useEffect(() => {
-    setLoading(true)
-    getOrder()
+    if (order === null) {
+      setLoading(true)
+      getOrder()
+    }
+    return () => {
+      setLoading(false)
+    }
+  }, [order])
+
+  // clear order details on unmount
+  useEffect(() => {
+    return () => {
+      clearOrder()
+    }
   }, [])
 
   // redirect to order tracking if user has order
@@ -358,7 +370,8 @@ function mapStateToProps(state: any) {
 const mapDispatch = {
   submitOrder: submitOrderAction,
   clearSubmitOutcome: clearSubmitOrderOutcomeAction,
-  getOrder: getOrderAction
+  getOrder: getOrderAction,
+  clearOrder: clearOrderAction
 }
 
 export default connect(

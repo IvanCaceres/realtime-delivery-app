@@ -15,6 +15,9 @@ const slice = createSlice({
         setOrder(state, action) {
             state.order = action.payload
         },
+        clearOrder(state, action) {
+            state.order = null
+        },
         setOrders(state, action) {
             state.orders = action.payload
         },
@@ -64,6 +67,7 @@ const slice = createSlice({
 export const reducer = slice.reducer
 export const {
     setOrderUpdateOutcome: setOrderUpdateOutcomeAction,
+    clearOrder: clearOrderAction,
     clearOrderUpdateOutcome: clearOrderUpdateOutcomeAction,
     setOrder: setOrderAction,
     setOrders: setOrdersAction,
