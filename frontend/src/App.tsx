@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from 'react-redux'
 
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
 
 // layouts
 import AdminLayout from './Layouts/AdminLayout'
@@ -34,6 +34,7 @@ import { EchoContext } from './context/echo'
 
 import { login } from './store/features/user/userFeatures'
 import ViewOrders from "./components/ViewOrders";
+import { history } from "./store/configureStore"
 
 const App: React.FC = ({ login, user }: any) => {
   const echo = useEcho()
@@ -89,7 +90,7 @@ const App: React.FC = ({ login, user }: any) => {
 
   return (
     <EchoContext.Provider value={echo}>
-      <Router>
+      <Router history={history}>
         <Switch>
           {adminRoutes}
           <AppLayout>

@@ -40,3 +40,4 @@ export const reducer = slice.reducer
 export const { setSubmitOutcome: setSubmitFeaturedOutcomeAction, clearSubmitOutcome: clearSubmitFeaturedOutcomeAction, setFeatured: setFeaturedAction, setFeaturedItems: setFeaturedItemsAction } = slice.actions
 export const getFeaturedAction = createAction<any>('featured/get')
 export const submitFeaturedAction = createAction<any>('featured/submitForm')
+export const deleteFeaturedAction = createAction<any>('featured/delete')

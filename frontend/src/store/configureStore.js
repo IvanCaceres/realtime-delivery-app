@@ -1,4 +1,5 @@
-import { configureStore, getDefaultMiddleware, combineReducers } from '@reduxjs/toolkit'
+import { getDefaultMiddleware, combineReducers } from '@reduxjs/toolkit'
+import { applyMiddleware, compose, createStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { fork } from 'redux-saga/effects'
 import userReducer from './features/user/userFeatures'
@@ -11,6 +12,9 @@ import { reducer as cartReducer } from './features/cart'
 import { reducer as orderReducer } from './features/order'
 import { systemReducer } from './features/system'
 import watchLoginSaga, { checkToken, watchLogout, watchSubmitRegisterForm } from './sagas/login'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { createBrowserHistory } from 'history'
+
 import {
     watchSubmitCategoryForm,
     watchGetFeatured,
@@ -18,6 +22,7 @@ import {
     watchGetProduct,
     watchGetProductOption,
     watchSubmitFeaturedForm,
+    watchDeleteFeaturedItem,
     watchSubmitProductForm,
     watchSubmitProductOptionForm,
     watchSubmitReferralCodeForm,
@@ -29,7 +34,9 @@ import {
     watchSubmitAdminOrderEdit
 } from './sagas/api'
 
-const reducer = combineReducers({
+export const history = createBrowserHistory()
+
+const createRootReducer = (history) => combineReducers({
     user: userReducer,
     category: categoryReducer,
     featured: featuredReducer,
@@ -38,7 +45,8 @@ const reducer = combineReducers({
     referralCode: referralCodeReducer,
     system: systemReducer,
     cart: cartReducer,
-    order: orderReducer
+    order: orderReducer,
+    router: connectRouter(history)
 })
 
 export default function* rootSaga() {
@@ -55,6 +63,7 @@ export default function* rootSaga() {
     yield fork(watchGetOrdersAdmin)
     yield fork(watchSubmitAdminOrderEdit)
     yield fork(watchSubmitCategoryForm)
+    yield fork(watchDeleteFeaturedItem)
     yield fork(watchSubmitFeaturedForm)
     yield fork(watchSubmitProductForm)
     yield fork(watchSubmitProductOptionForm)
@@ -64,13 +73,22 @@ export default function* rootSaga() {
 }
 
 const sagaMiddleware = createSagaMiddleware()
-const middleware = [...getDefaultMiddleware(), sagaMiddleware]
+const middleware = [routerMiddleware(history), ...getDefaultMiddleware(), sagaMiddleware]
 
-export const store = configureStore({
-    reducer,
-    middleware,
-    devTools: process.env.NODE_ENV !== 'production',
-})
+function configureStore(preloadedState) {
+    const createdStore = createStore(
+        createRootReducer(history), // root reducer with router state
+        preloadedState,
+        compose(
+            applyMiddleware(
+                ...middleware
+            ),
+        ),
+    )
+    return createdStore
+}
+
+export const store = configureStore()
 
 sagaMiddleware.run(rootSaga)
 

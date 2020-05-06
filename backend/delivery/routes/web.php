@@ -107,6 +107,7 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
 
     Route::post('/featuredItem', 'FeaturedItemController@create');
     Route::put('/featuredItem/{featuredItem}', 'FeaturedItemController@edit');
+    Route::delete('/featuredItem/{featuredItem}', 'FeaturedItemController@delete');
 
     Route::get('/orders', 'OrdersController@index');
     Route::get('/orders/{id}', 'OrdersController@get');

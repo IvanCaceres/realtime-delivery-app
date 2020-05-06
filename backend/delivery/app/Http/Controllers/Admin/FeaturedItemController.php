@@ -123,4 +123,17 @@ class FeaturedItemController {
             }
         });
     }
+
+    // delete featured item
+    public function delete(Request $request, FeaturedItem $featuredItem)
+    {
+        $oldImagePath = $featuredItem->image;
+        return DB::transaction(function () use ($request, $featuredItem) {
+            $featuredItem->featurable()->sync([]);
+            $featuredItem->delete();
+        });
+        if ($oldImagePath) {
+            Storage::disk('public')->delete($oldImagePath);
+        }
+    }
 }

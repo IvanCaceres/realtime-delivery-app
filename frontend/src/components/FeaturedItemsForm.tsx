@@ -20,7 +20,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ImageUploader from 'react-images-upload/src/component'
 
-import { clearSubmitFeaturedOutcomeAction, getFeaturedAction, setFeaturedAction, submitFeaturedAction } from './../store/features/featured'
+import { clearSubmitFeaturedOutcomeAction, getFeaturedAction, setFeaturedAction, submitFeaturedAction, deleteFeaturedAction } from './../store/features/featured'
 import { getProductAction } from './../store/features/product'
 import { getCategoryAction } from './../store/features/category'
 
@@ -62,7 +62,7 @@ interface formPayload {
     id?: string,
 }
 
-function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, getCategory, getFeatured, getProduct, products, setFeatured, submitForm, success }: any) {
+function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, getCategory, getFeatured, getProduct, products, setFeatured, deleteFeatured, submitForm, success }: any) {
     const classes = useStyles()
     let { id } = useParams()
     let history = useHistory()
@@ -253,8 +253,26 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
         setProductSelected(event.target.value)
     }
 
+    function deleteFeaturedItem(e: any) {
+        console.log('deleting featured called')
+        deleteFeatured(id)
+    }
+
     return (
         <Container component="main" maxWidth="sm" className={classes.root}>
+            {/* delete button */}
+            {id &&
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    className={classes.submit}
+                    onClick={deleteFeaturedItem}
+                >
+                    Delete
+                </Button>
+            }
             <Typography component="h1" variant="h3">{featuredId ? 'Edit' : 'Create'} Featured Item</Typography>
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
                 {/* Product Name */}
@@ -380,6 +398,7 @@ function mapStateToProps(state: any) {
 const mapDispatch = {
     setFeatured: setFeaturedAction,
     getFeatured: getFeaturedAction,
+    deleteFeatured: deleteFeaturedAction,
     submitForm: submitFeaturedAction,
     getProduct: getProductAction,
     getCategory: getCategoryAction,

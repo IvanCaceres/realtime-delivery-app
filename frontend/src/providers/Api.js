@@ -150,6 +150,15 @@ export const submitFeaturedForm = (form) => {
     })
 }
 
+export const deleteFeatured = (id) => {
+    let method = 'delete'
+    let url = `/admin/featuredItem/${id}`
+    return axios({
+        method,
+        url
+    })
+}
+
 // product
 export const getProduct = (id, queryParams) => {
     // public route

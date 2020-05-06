@@ -4,15 +4,17 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
-import { store } from './store/configureStore'
+import { store, history } from './store/configureStore'
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { ConnectedRouter } from 'connected-react-router'
 
 ReactDOM.render(
     <Provider store={store}>
-        <CssBaseline />
-        <App />
-    </Provider>
-    ,
+        <ConnectedRouter history={history}>
+            <CssBaseline />
+            <App />
+        </ConnectedRouter>
+    </Provider>,
     document.getElementById('root')
 );
 
