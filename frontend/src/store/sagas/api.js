@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router'
 import { call, put, takeEvery } from 'redux-saga/effects'
-import { submitCategoryFormAction, setSubmitCategoryFormOutcome, getCategoryAction, setCategoryAction, setCategoriesAction } from './../features/category'
+import { submitCategoryFormAction, setSubmitCategoryFormOutcome, getCategoryAction, setCategoryAction, setCategoriesAction, deleteCategoryAction } from './../features/category'
 import {
     getHomeContent,
     getCategory,
@@ -8,6 +8,7 @@ import {
     getProductOption,
     getReferralCode,
     submitCategoryForm,
+    deleteCategory,
     getFeatured,
     submitFeaturedForm,
     deleteFeatured,
@@ -96,6 +97,16 @@ function* submitCategoryFormSaga({ payload }) {
             errors.push('Error submitting category form.')
         }
         yield put(setSubmitCategoryFormOutcome({ errors }))
+    }
+}
+
+function* deleteCategorySaga({ payload }) {
+    try {
+        const res = yield call(deleteCategory, payload)
+        let success = true
+        yield put(push('/admin/category/view'))
+    } catch (error) {
+        console.error(error)
     }
 }
 
@@ -198,31 +209,11 @@ function* submitFeaturedSaga({ payload }) {
 
 function* deleteFeaturedSaga({ payload }) {
     try {
-        console.log('deleting featured saga')
         const res = yield call(deleteFeatured, payload)
         let success = true
         yield put(push('/admin/featured/view'))
     } catch (error) {
         console.error(error)
-        // grab all error messages
-        let errors = []
-        if (error.response.data) {
-            if (error.response.data.message) {
-                errors.push(error.response.data.message)
-            }
-            if (error.response.data.errors) {
-                // loop through errors object
-                // loop through error messages for each field
-                for (const fieldErrors of Object.values(error.response.data.errors)) {
-                    errors.push(...fieldErrors)
-                }
-            }
-        }
-
-        if (errors.length === 0) {
-            errors.push('Error deleting featured item.')
-        }
-        yield put(setSubmitFeaturedOutcomeAction({ errors }))
     }
 }
 
@@ -460,6 +451,10 @@ export function* watchSubmitReferralCodeForm() {
 
 export function* watchSubmitCategoryForm() {
     yield takeEvery(submitCategoryFormAction.toString(), submitCategoryFormSaga)
+}
+
+export function* watchDeleteCategory() {
+    yield takeEvery(deleteCategoryAction.toString(), deleteCategorySaga)
 }
 
 export function* watchDeleteFeaturedItem() {

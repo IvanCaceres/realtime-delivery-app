@@ -77,6 +77,15 @@ export const submitCategoryForm = (name, id) => {
     });
 }
 
+export const deleteCategory = (id) => {
+    let method = 'delete'
+    let url = `/admin/category/${id}`
+    return axios({
+        method,
+        url
+    })
+}
+
 // product option
 export const getProductOption = (id, queryParams) => {
     // public route

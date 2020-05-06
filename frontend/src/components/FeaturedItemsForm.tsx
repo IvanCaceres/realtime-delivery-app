@@ -254,7 +254,6 @@ function FeaturedItemForm({ categories, clearSubmitOutcome, errors, featured, ge
     }
 
     function deleteFeaturedItem(e: any) {
-        console.log('deleting featured called')
         deleteFeatured(id)
     }
 

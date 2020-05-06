@@ -98,6 +98,7 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
 
     Route::post('/category', 'CategoryController@create');
     Route::put('/category/{category}', 'CategoryController@edit');
+    Route::delete('/category/{category}', 'CategoryController@delete');
 
     Route::post('/productOption', 'ProductOptionController@create');
     Route::put('/productOption/{productOption}', 'ProductOptionController@edit');

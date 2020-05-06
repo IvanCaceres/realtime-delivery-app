@@ -13,4 +13,9 @@ class Category extends Model
     {
         return $this->morphOne('App\FeaturedItem', 'featurable');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany('App\Product');
+    }
 }

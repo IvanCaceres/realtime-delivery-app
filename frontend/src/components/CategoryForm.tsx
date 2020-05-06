@@ -20,7 +20,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 
 // redux
-import { submitCategoryFormAction, getCategoryAction, setCategoryAction, clearSubmitOutcomeAction } from './../store/features/category'
+import { submitCategoryFormAction, getCategoryAction, setCategoryAction, clearSubmitOutcomeAction, deleteCategoryAction } from './../store/features/category'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -43,7 +43,7 @@ interface formPayload {
     id?: string
 }
 
-function CategoryForm({ category, submitCategoryForm, success, errors, getCategory, setCategory, clearSubmitOutcome }: any) {
+function CategoryForm({ category, submitCategoryForm, success, errors, getCategory, setCategory, deleteCategory, clearSubmitOutcome }: any) {
     const classes = useStyles()
     let { id } = useParams()
     let history = useHistory()
@@ -132,8 +132,25 @@ function CategoryForm({ category, submitCategoryForm, success, errors, getCatego
         submitCategoryForm(formData)
     }
 
+    function deleteCategoryHandler(e: any) {
+        deleteCategory(id)
+    }
+
     return (
         <Container component="main" maxWidth="sm" className={classes.root}>
+            {/* delete button */}
+            {id &&
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    className={classes.submit}
+                    onClick={deleteCategoryHandler}
+                >
+                    Delete
+                </Button>
+            }
             <Typography component="h1" variant="h3">{categoryId ? 'Edit' : 'Create'} Category</Typography>
             <form className={classes.form} onSubmit={(e) => handleSubmit(e)}>
                 {/* Category Name */}
@@ -195,7 +212,8 @@ const mapDispatch = {
     setCategory: setCategoryAction,
     submitCategoryForm: submitCategoryFormAction,
     getCategory: getCategoryAction,
-    clearSubmitOutcome: clearSubmitOutcomeAction
+    clearSubmitOutcome: clearSubmitOutcomeAction,
+    deleteCategory: deleteCategoryAction
 }
 
 export default connect(

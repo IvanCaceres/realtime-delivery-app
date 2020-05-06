@@ -40,3 +40,4 @@ export const categoryReducer = categorySlice.reducer
 export const { setSubmitCategoryFormOutcome, clearSubmitOutcome: clearSubmitOutcomeAction, setCategory: setCategoryAction, setCategories: setCategoriesAction } = categorySlice.actions
 export const getCategoryAction = createAction<any>('category/get')
 export const submitCategoryFormAction = createAction<any>('category/submitForm')
+export const deleteCategoryAction = createAction<any>('category/delete')
