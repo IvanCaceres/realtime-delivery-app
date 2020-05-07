@@ -40,3 +40,4 @@ export const reducer = slice.reducer
 export const { setSubmitOutcome: setSubmitProductOutcomeAction, clearSubmitOutcome: clearSubmitProductOutcomeAction, setProduct: setProductAction, setProducts: setProductsAction } = slice.actions
 export const getProductAction = createAction<any>('product/get')
 export const submitProductAction = createAction<any>('product/submitForm')
+export const deleteProductAction = createAction<any>('product/delete')

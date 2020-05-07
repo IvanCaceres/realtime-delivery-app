@@ -215,6 +215,15 @@ export const submitProductForm = (form) => {
     })
 }
 
+export const deleteProduct = (id) => {
+    let method = 'delete'
+    let url = `/admin/product/${id}`
+    return axios({
+        method,
+        url
+    })
+}
+
 // referral code
 export const getReferralCode = (queryParams) => {
     // private admine route

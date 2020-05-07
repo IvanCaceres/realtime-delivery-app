@@ -13,6 +13,7 @@ import {
     submitFeaturedForm,
     deleteFeatured,
     submitProductForm,
+    deleteProduct,
     submitProductOptionForm,
     submitReferralCodeForm,
     submitOrder,
@@ -20,7 +21,7 @@ import {
     getAdminOrders,
     submitAdminOrderEdit
 } from './../../providers/Api'
-import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction } from '../features/product'
+import { submitProductAction, setSubmitProductOutcomeAction, getProductAction, setProductAction, setProductsAction, deleteProductAction } from '../features/product'
 import { setFeaturedAction, setFeaturedItemsAction, setSubmitFeaturedOutcomeAction, submitFeaturedAction, getFeaturedAction, deleteFeaturedAction } from './../features/featured'
 import { submitProductOptionAction, setSubmitProductOptionOutcomeAction, getProductOptionAction, setProductOptionAction, setProductOptionsAction } from '../features/productOption'
 import { setReferralCodesAction, setSubmitReferralCodeFormOutcomeAction, submitReferralCodeFormAction, getReferralCodeAction } from './../features/referralCode'
@@ -265,6 +266,16 @@ function* submitProductSaga({ payload }) {
     }
 }
 
+function* deleteProductSaga({ payload }) {
+    try {
+        const res = yield call(deleteProduct, payload)
+        let success = true
+        yield put(push('/admin/product/view'))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // referral code
 function* getReferralCodeSaga({ payload }) {
     try {
@@ -467,6 +478,10 @@ export function* watchSubmitFeaturedForm() {
 
 export function* watchSubmitProductForm() {
     yield takeEvery(submitProductAction.toString(), submitProductSaga)
+}
+
+export function* watchDeleteProduct() {
+    yield takeEvery(deleteProductAction.toString(), deleteProductSaga)
 }
 
 export function* watchSubmitProductOptionForm() {

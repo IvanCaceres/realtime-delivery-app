@@ -19,7 +19,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ImageUploader from 'react-images-upload/src/component'
 
-import { submitProductAction, getProductAction, setProductAction, clearSubmitProductOutcomeAction } from "../store/features/product";
+import { submitProductAction, getProductAction, setProductAction, clearSubmitProductOutcomeAction, deleteProductAction } from "../store/features/product";
 import { getProductOptionAction } from './../store/features/productOption'
 import { getCategoryAction } from './../store/features/category'
 
@@ -61,7 +61,7 @@ interface formPayload {
     id?: string | null
 }
 
-function AddProductForm({ product, categories, productOptions, getProductOption, getCategory, submitForm, setProduct, getProduct, clearSubmitOutcome, success, errors }: any) {
+function AddProductForm({ product, categories, productOptions, getProductOption, getCategory, submitForm, deleteProduct, setProduct, getProduct, clearSubmitOutcome, success, errors }: any) {
     const classes = useStyles()
     let { id } = useParams()
     let history = useHistory()
@@ -250,8 +250,25 @@ function AddProductForm({ product, categories, productOptions, getProductOption,
         })
     }
 
+    function deleteProductHandler() {
+        deleteProduct(id)
+    }
+
     return (
         <Container component="main" maxWidth="sm" className={classes.root}>
+            {/* delete button */}
+            {id &&
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    className={classes.submit}
+                    onClick={deleteProductHandler}
+                >
+                    Delete
+                </Button>
+            }
             <Typography component="h1" variant="h3">{productId ? 'Edit' : 'Create'} Product</Typography>
             <form onSubmit={(e) => handleSubmit(e)}>
                 {/* Product Name */}
@@ -381,7 +398,8 @@ const mapDispatch = {
     getProduct: getProductAction,
     getCategory: getCategoryAction,
     getProductOption: getProductOptionAction,
-    clearSubmitOutcome: clearSubmitProductOutcomeAction
+    clearSubmitOutcome: clearSubmitProductOutcomeAction,
+    deleteProduct: deleteProductAction
 }
 
 export default connect(

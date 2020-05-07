@@ -21,4 +21,9 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Category');
     }
+
+    public function featured_item()
+    {
+        return $this->morphOne('App\FeaturedItem', 'featurable');
+    }
 }

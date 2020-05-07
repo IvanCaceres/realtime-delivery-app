@@ -88,4 +88,17 @@ class ProductsController {
             }
         });
     }
+
+    public function delete(Request $request, Product $product)
+    {
+        return DB::transaction(function () use ($request, $product) {
+            $product->featured_item()->each(function($featured) {
+                // and then the static::deleting method when you delete each one
+                $featured->delete();
+            });
+            $product->options()->sync([]);
+            $product->categories()->sync([]);
+            $product->delete();
+        });
+    }
 }

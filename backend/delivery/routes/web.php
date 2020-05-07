@@ -105,6 +105,7 @@ Route::namespace('Admin')->prefix('admin')->middleware(['can:access-admin'])->gr
 
     Route::post('/product', 'ProductsController@create');
     Route::put('/product/{product}', 'ProductsController@edit');
+    Route::delete('/product/{product}', 'ProductsController@delete');
 
     Route::post('/featuredItem', 'FeaturedItemController@create');
     Route::put('/featuredItem/{featuredItem}', 'FeaturedItemController@edit');

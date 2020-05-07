@@ -25,6 +25,7 @@ import {
     watchSubmitFeaturedForm,
     watchDeleteFeaturedItem,
     watchSubmitProductForm,
+    watchDeleteProduct,
     watchSubmitProductOptionForm,
     watchSubmitReferralCodeForm,
     watchGetReferralCode,
@@ -68,6 +69,7 @@ export default function* rootSaga() {
     yield fork(watchDeleteFeaturedItem)
     yield fork(watchSubmitFeaturedForm)
     yield fork(watchSubmitProductForm)
+    yield fork(watchDeleteProduct)
     yield fork(watchSubmitProductOptionForm)
     yield fork(watchSubmitReferralCodeForm)
     yield fork(watchSubmitRegisterForm)
